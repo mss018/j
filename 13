@@ -1,0 +1,286 @@
+import javax.swing.*; 
+import javax.swing.border.*; 
+import java.awt.*; 
+import java.awt.event.*; 
+public class Experiment13 extends JFrame {
+private JTextField txtName, txtEmail, txtPhone; 
+private JPasswordField txtPassword; 
+private JRadioButton rbMale, rbFemale, rbOther; 
+private JCheckBox chkJava, chkPython, chkCpp, chkJavaScript; 
+private JComboBox<String> cmbCourse; 
+private JTextArea txtAddress, txtOutput; 
+    private JSpinner spinnerAge; 
+    private JSlider sliderExperience; 
+    private JButton btnSubmit, btnClear, btnExit; 
+     
+    public Experiment13() { 
+        setTitle("Student Registration Form - Swing Demo"); 
+        setSize(800, 700); 
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); 
+        setLocationRelativeTo(null);
+        JPanel mainPanel = new JPanel(new BorderLayout(10, 10)); 
+        mainPanel.setBorder(new EmptyBorder(15, 15, 15, 15)); 
+        JPanel headerPanel = new JPanel(); 
+        headerPanel.setBackground(new Color(70, 130, 180)); 
+        JLabel lblTitle = new JLabel("Student Registration Form"); 
+        lblTitle.setFont(new Font("Arial", Font.BOLD, 24)); 
+        lblTitle.setForeground(Color.WHITE); 
+        headerPanel.add(lblTitle); 
+        mainPanel.add(headerPanel, BorderLayout.NORTH);
+        JPanel formPanel = new JPanel(new GridBagLayout()); 
+        formPanel.setBorder(new TitledBorder("Personal Information")); 
+        GridBagConstraints gbc = new GridBagConstraints(); 
+        gbc.insets = new Insets(5, 5, 5, 5); 
+        gbc.fill = GridBagConstraints.HORIZONTAL; 
+        int row = 0;
+        gbc.gridx = 0; gbc.gridy = row; 
+        formPanel.add(new JLabel("Full Name:"), gbc); 
+        gbc.gridx = 1; gbc.gridwidth = 2; 
+        txtName = new JTextField(25); 
+        formPanel.add(txtName, gbc); 
+        row++; 
+        gbc.gridx = 0; gbc.gridy = row; gbc.gridwidth = 1; 
+        formPanel.add(new JLabel("Email:"), gbc); 
+        gbc.gridx = 1; gbc.gridwidth = 2; 
+        txtEmail = new JTextField(25); 
+        formPanel.add(txtEmail, gbc);
+        row++; 
+        gbc.gridx = 0; gbc.gridy = row; gbc.gridwidth = 1; 
+        formPanel.add(new JLabel("Password:"), gbc); 
+        gbc.gridx = 1; gbc.gridwidth = 2; 
+        txtPassword = new JPasswordField(25); 
+        formPanel.add(txtPassword, gbc); 
+        row++; 
+        gbc.gridx = 0; gbc.gridy = row; gbc.gridwidth = 1; 
+        formPanel.add(new JLabel("Phone:"), gbc); 
+        gbc.gridx = 1; gbc.gridwidth = 2; 
+        txtPhone = new JTextField(25); 
+        formPanel.add(txtPhone, gbc);
+        row++; 
+        gbc.gridx = 0; gbc.gridy = row; gbc.gridwidth = 1; 
+        formPanel.add(new JLabel("Age:"), gbc); 
+        gbc.gridx = 1; 
+        SpinnerNumberModel ageModel = new SpinnerNumberModel(18, 15, 60, 1); 
+        spinnerAge = new JSpinner(ageModel); 
+        formPanel.add(spinnerAge, gbc);
+        row++; 
+        gbc.gridx = 0; gbc.gridy = row; 
+        formPanel.add(new JLabel("Gender:"), gbc); 
+        gbc.gridx = 1; gbc.gridwidth = 2; 
+        JPanel genderPanel = new JPanel(new FlowLayout(FlowLayout.LEFT)); 
+        rbMale = new JRadioButton("Male"); 
+        rbFemale = new JRadioButton("Female"); 
+        rbOther = new JRadioButton("Other"); 
+        ButtonGroup genderGroup = new ButtonGroup(); 
+        genderGroup.add(rbMale); 
+        genderGroup.add(rbFemale); 
+        genderGroup.add(rbOther); 
+        genderPanel.add(rbMale); 
+        genderPanel.add(rbFemale); 
+        genderPanel.add(rbOther); 
+        formPanel.add(genderPanel, gbc); 
+        row++; 
+        gbc.gridx = 0; gbc.gridy = row; gbc.gridwidth = 1; 
+        formPanel.add(new JLabel("Course:"), gbc); 
+        gbc.gridx = 1; gbc.gridwidth = 2; 
+        String[] courses = {"Select Course", "Computer Science", "Information Technology",  
+                           "Electronics", "Mechanical", "Civil", "Electrical"}; 
+        cmbCourse = new JComboBox<>(courses); 
+        formPanel.add(cmbCourse, gbc);
+        row++; 
+        gbc.gridx = 0; gbc.gridy = row; gbc.gridwidth = 1; 
+        formPanel.add(new JLabel("Skills:"), gbc); 
+        gbc.gridx = 1; gbc.gridwidth = 2; 
+        JPanel skillsPanel = new JPanel(new FlowLayout(FlowLayout.LEFT)); 
+        chkJava = new JCheckBox("Java"); 
+        chkPython = new JCheckBox("Python"); 
+        chkCpp = new JCheckBox("C++"); 
+        chkJavaScript = new JCheckBox("JavaScript"); 
+        skillsPanel.add(chkJava); 
+        skillsPanel.add(chkPython); 
+        skillsPanel.add(chkCpp); 
+        skillsPanel.add(chkJavaScript); 
+        formPanel.add(skillsPanel, gbc);
+        row++; 
+        gbc.gridx = 0; gbc.gridy = row; gbc.gridwidth = 1; 
+        formPanel.add(new JLabel("Experience (years):"), gbc); 
+        gbc.gridx = 1; gbc.gridwidth = 2; 
+        sliderExperience = new JSlider(0, 10, 0); 
+        sliderExperience.setMajorTickSpacing(2); 
+        sliderExperience.setMinorTickSpacing(1); 
+        sliderExperience.setPaintTicks(true); 
+        sliderExperience.setPaintLabels(true); 
+        formPanel.add(sliderExperience, gbc);
+        row++; 
+        gbc.gridx = 0; gbc.gridy = row; gbc.gridwidth = 1; 
+        gbc.anchor = GridBagConstraints.NORTH; 
+        formPanel.add(new JLabel("Address:"), gbc); 
+        gbc.gridx = 1; gbc.gridwidth = 2; 
+        txtAddress = new JTextArea(3, 25); 
+        txtAddress.setLineWrap(true); 
+        txtAddress.setWrapStyleWord(true); 
+        JScrollPane addressScroll = new JScrollPane(txtAddress); 
+        formPanel.add(addressScroll, gbc); 
+        mainPanel.add(formPanel, BorderLayout.CENTER);  
+        JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 20, 10)); 
+        btnSubmit = new JButton("Submit"); 
+        btnSubmit.setBackground(new Color(60, 179, 113)); 
+        btnSubmit.setForeground(Color.WHITE); 
+        btnSubmit.setFont(new Font("Arial", Font.BOLD, 14)); 
+        btnSubmit.setPreferredSize(new Dimension(100, 35)); 
+        btnClear = new JButton("Clear"); 
+        btnClear.setBackground(new Color(255, 165, 0)); 
+        btnClear.setForeground(Color.WHITE); 
+        btnClear.setFont(new Font("Arial", Font.BOLD, 14)); 
+        btnClear.setPreferredSize(new Dimension(100, 35)); 
+        btnExit = new JButton("Exit"); 
+        btnExit.setBackground(new Color(220, 20, 60)); 
+        btnExit.setForeground(Color.WHITE); 
+        btnExit.setFont(new Font("Arial", Font.BOLD, 14)); 
+        btnExit.setPreferredSize(new Dimension(100, 35)); 
+        buttonPanel.add(btnSubmit); 
+        buttonPanel.add(btnClear); 
+        buttonPanel.add(btnExit); 
+        JPanel outputPanel = new JPanel(new BorderLayout()); 
+        outputPanel.setBorder(new TitledBorder("Output")); 
+        txtOutput = new JTextArea(8, 50); 
+        txtOutput.setEditable(false); 
+        txtOutput.setFont(new Font("Monospaced", Font.PLAIN, 12)); 
+        JScrollPane outputScroll = new JScrollPane(txtOutput); 
+        outputPanel.add(outputScroll, BorderLayout.CENTER); 
+        JPanel southPanel = new JPanel(new BorderLayout()); 
+        southPanel.add(buttonPanel, BorderLayout.NORTH); 
+        southPanel.add(outputPanel, BorderLayout.CENTER); 
+        mainPanel.add(southPanel, BorderLayout.SOUTH); 
+        add(mainPanel);
+        btnSubmit.addActionListener(new ActionListener() { 
+            @Override 
+            public void actionPerformed(ActionEvent e) { 
+                submitForm(); 
+            } 
+        });
+        btnClear.addActionListener(e -> clearForm()); 
+        btnExit.addActionListener(e -> { 
+            int confirm = JOptionPane.showConfirmDialog( 
+                Experiment13.this, 
+                "Are you sure you want to exit?", 
+                "Confirm Exit", 
+                JOptionPane.YES_NO_OPTION 
+            ); 
+            if (confirm == JOptionPane.YES_OPTION) { 
+                System.exit(0); 
+            } 
+        }); 
+        cmbCourse.addActionListener(e -> { 
+            String selected = (String) cmbCourse.getSelectedItem(); 
+            if (!selected.equals("Select Course")) { 
+              
+            } 
+        }); 
+    } 
+    private void submitForm() { 
+        if (txtName.getText().trim().isEmpty()) { 
+            JOptionPane.showMessageDialog(this, "Please enter your name!",  
+                "Validation Error", JOptionPane.ERROR_MESSAGE); 
+            txtName.requestFocus(); 
+            return; 
+        }
+        if (txtEmail.getText().trim().isEmpty()) { 
+            JOptionPane.showMessageDialog(this, "Please enter your email!",  
+                "Validation Error", JOptionPane.ERROR_MESSAGE); 
+            txtEmail.requestFocus(); 
+            return; 
+        }
+        if (cmbCourse.getSelectedIndex() == 0) { 
+            JOptionPane.showMessageDialog(this, "Please select a course!",  
+                "Validation Error", JOptionPane.WARNING_MESSAGE); 
+            cmbCourse.requestFocus(); 
+            return; 
+        }
+        StringBuilder output = new StringBuilder(); 
+        output.append("====== REGISTRATION DETAILS ======\n\n"); 
+        output.append("Name: ").append(txtName.getText()).append("\n"); 
+        output.append("Email: ").append(txtEmail.getText()).append("\n"); 
+        output.append("Phone: ").append(txtPhone.getText()).append("\n"); 
+        output.append("Age: ").append(spinnerAge.getValue()).append("\n"); 
+        String gender = "Not specified"; 
+        if (rbMale.isSelected()) gender = "Male"; 
+        else if (rbFemale.isSelected()) gender = "Female"; 
+        else if (rbOther.isSelected()) gender = "Other"; 
+        output.append("Gender: ").append(gender).append("\n"); 
+        output.append("Course: ").append(cmbCourse.getSelectedItem()).append("\n"); 
+        StringBuilder skills = new StringBuilder(); 
+        if (chkJava.isSelected()) skills.append("Java, "); 
+        if (chkPython.isSelected()) skills.append("Python, "); 
+        if (chkCpp.isSelected()) skills.append("C++, "); 
+        if (chkJavaScript.isSelected()) skills.append("JavaScript, "); 
+        String skillsStr = skills.length() > 0 ?  
+                          skills.substring(0, skills.length() - 2) : "None"; 
+        output.append("Skills: ").append(skillsStr).append("\n"); 
+        output.append("Experience: ").append(sliderExperience.getValue()) 
+              .append(" years\n"); 
+        output.append("Address: ").append(txtAddress.getText()).append("\n"); 
+        output.append("\n====================================\n"); 
+        output.append("Registration submitted successfully!");
+        txtOutput.setText(output.toString()); 
+        JOptionPane.showMessageDialog(this,  
+            "Registration submitted successfully!",  
+            "Success", JOptionPane.INFORMATION_MESSAGE); 
+    }
+    private void clearForm() { 
+        txtName.setText(""); 
+        txtEmail.setText(""); 
+        txtPassword.setText(""); 
+        txtPhone.setText(""); 
+        spinnerAge.setValue(18); 
+        ButtonGroup genderGroup = new ButtonGroup(); 
+        genderGroup.add(rbMale); 
+        genderGroup.add(rbFemale); 
+        genderGroup.add(rbOther); 
+        genderGroup.clearSelection(); 
+        cmbCourse.setSelectedIndex(0); 
+        chkJava.setSelected(false); 
+        chkPython.setSelected(false); 
+        chkCpp.setSelected(false); 
+        chkJavaScript.setSelected(false); 
+        sliderExperience.setValue(0); 
+        txtAddress.setText(""); 
+        txtOutput.setText("");
+        txtName.requestFocus(); 
+    } 
+    public static void main(String[] args) { 
+        try { 
+            UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName()); 
+        } catch (Exception e) { 
+            e.printStackTrace(); 
+        } 
+        SwingUtilities.invokeLater(new Runnable() { 
+            @Override 
+            public void run() { 
+                System.out.println("==========GUI APPLICATION USING SWING PACKAGE==========");
+                System.out.println("\nSwing Components Demonstrated:"); 
+                System.out.println("  • JFrame - Main window"); 
+                System.out.println("  • JPanel - Containers with different layouts"); 
+                System.out.println("  • JLabel - Text labels"); 
+                System.out.println("  • JTextField - Single-line text input"); 
+                System.out.println("  • JPasswordField - Password input"); 
+                System.out.println("  • JTextArea - Multi-line text input"); 
+                System.out.println("  • JButton - Action buttons"); 
+                System.out.println("  • JRadioButton - Single selection from group"); 
+                System.out.println("  • JCheckBox - Multiple selection"); 
+                System.out.println("  • JComboBox - Dropdown selection"); 
+                System.out.println("  • JSpinner - Numeric input with arrows"); 
+                System.out.println("  • JSlider - Range selection"); 
+                System.out.println("  • JScrollPane - Scrollable container"); 
+                System.out.println("\nLayout Managers Used:"); 
+                System.out.println("  • BorderLayout - Main frame layout"); 
+                System.out.println("  • GridBagLayout - Form layout"); 
+                System.out.println("  • FlowLayout - Button and option panels"); 
+                System.out.println("\nLaunching GUI...\n"); 
+                 
+                Experiment13 frame = new Experiment13(); 
+                frame.setVisible(true); 
+            } 
+        }); 
+    } 
+} 
