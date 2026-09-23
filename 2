@@ -1,0 +1,83 @@
+public class Experiment2{ 
+    public static void main(String[] args){ 
+        System.out.println("===== CREATING OBJECTS WITH DIFFERENT CONSTRUCTORS =====\n"); 
+        System.out.println("1. Creating Student with default constructor:"); 
+        Student s1=new Student(); 
+        System.out.println(); 
+        System.out.println("2. Creating Student with parameterized constructor:"); 
+        Student s2=new Student("Alice Johnson", 20, "STU001", "Computer Science"); 
+        System.out.println(); 
+        System.out.println("3. Creating Student with copy constructor:"); 
+        Student s3=new Student(s2); 
+        System.out.println(); 
+        System.out.println("===== DISPLAYING STUDENT DETAILS =====\n"); 
+        System.out.println("Student 1 (Default):"); 
+        s1.display();   
+        System.out.println("\nStudent 2 (Parameterized):"); 
+        s2.display();   
+        System.out.println("\nStudent 3 (Copy of Student 2):"); 
+        s3.display(); 
+        s2.showThisUsage(); 
+        System.out.println("\n===== CREATING PARENT CLASS OBJECT ====="); 
+        Person p1=new Person("Bob Smith", 45); 
+        System.out.println("\nPerson details:"); 
+        p1.display(); 
+    } 
+} 
+class Person { 
+    protected String name; 
+    protected int age; 
+    public Person() { 
+        this.name="Unknown"; 
+        this.age=0; 
+        System.out.println("Person: Default constructor called"); 
+    } 
+    public Person(String name, int age) { 
+        this.name=name; 
+        this.age=age; 
+        System.out.println("Person: Parameterized constructor called"); 
+    } 
+    public Person(Person p) { 
+        this.name=p.name; 
+        this.age=p.age; 
+        System.out.println("Person: Copy constructor called"); 
+    }
+    public void display() { 
+        System.out.println("Name: " + name + ", Age: " + age); 
+    } 
+}  
+class Student extends Person { 
+    private String studentId; 
+    private String course; 
+    public Student() { 
+        this("Unknown", 0, "N/A", "N/A");  
+        System.out.println("Student: Default constructor called"); 
+    }  
+    public Student(String name, int age, String studentId, String course) { 
+        super(name, age);  
+        this.studentId=studentId;   
+        this.course=course; 
+        System.out.println("Student: Parameterized constructor called"); 
+    }  
+    public Student(Student s) { 
+        super(s);  
+        this.studentId=s.studentId; 
+        this.course=s.course; 
+        System.out.println("Student: Copy constructor called"); 
+    }  
+    public Student getSelf() { 
+        return this; 
+    }  
+    @Override 
+    public void display() { 
+        super.display(); 
+        System.out.println("Student ID: " + studentId + ", Course: " + course); 
+    } 
+    public void showThisUsage() { 
+        System.out.println("\n--- Demonstrating 'this' keyword ---"); 
+        System.out.println("this.name: " + this.name); 
+        System.out.println("this.studentId: " + this.studentId); 
+        System.out.println("this.getSelf() returns: " + this.getSelf()); 
+        System.out.println("Current object hashcode: " + this.hashCode()); 
+    } 
+} 
