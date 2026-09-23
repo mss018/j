@@ -1,0 +1,204 @@
+File: mathoperations/BasicMath.java 
+package mathoperations; 
+public class BasicMath { 
+public int add(int a, int b) { 
+return a + b; 
+    }  
+    public int subtract(int a, int b) { 
+        return a - b; 
+    }     
+    public int multiply(int a, int b) { 
+        return a * b; 
+    }      
+    public double divide(int a, int b) { 
+        if (b == 0) { 
+            throw new ArithmeticException("Cannot divide by zero"); 
+        } 
+        return (double) a / b; 
+    } 
+} 
+
+//=
+File: mathoperations/AdvancedMath.java 
+package mathoperations; 
+public class AdvancedMath {     
+    public double power(double base, double exponent) { 
+        return Math.pow(base, exponent); 
+    }     
+    public double squareRoot(double number) { 
+        if (number < 0) { 
+            throw new IllegalArgumentException("Cannot calculate square root of negative number"); 
+        } 
+        return Math.sqrt(number); 
+    }     
+    public long factorial(int n) { 
+        if (n < 0) { 
+            throw new IllegalArgumentException("Factorial not defined for negative numbers"); 
+        } 
+        long result = 1; 
+        for (int i = 2; i <= n; i++) { 
+            result *= i; 
+        } 
+        return result; 
+    } 
+    public boolean isPrime(int n) { 
+        if (n <= 1) return false; 
+        if (n <= 3) return true; 
+        if (n % 2 == 0 || n % 3 == 0) return false; 
+        for (int i = 5; i * i <= n; i += 6) { 
+            if (n % i == 0 || n % (i + 2) == 0) return false; 
+        } 
+        return true; 
+    } 
+}
+
+//==
+File: utilities/StringHelper.java 
+package utilities; 
+public class StringHelper {    
+    public String reverse(String str) { 
+        return new StringBuilder(str).reverse().toString(); 
+    }      
+    public boolean isPalindrome(String str) { 
+        String clean = str.replaceAll("\\s+", "").toLowerCase(); 
+        return clean.equals(new StringBuilder(clean).reverse().toString()); 
+    }     
+    public int countVowels(String str) { 
+        int count = 0; 
+        String vowels = "aeiouAEIOU"; 
+        for (char c : str.toCharArray()) { 
+            if (vowels.indexOf(c) != -1) { 
+                count++; 
+            } 
+        } 
+        return count; 
+    }    
+    public String toTitleCase(String str) { 
+        StringBuilder result = new StringBuilder(); 
+        boolean capitalizeNext = true; 
+        for (char c : str.toCharArray()) { 
+            if (Character.isWhitespace(c)) { 
+                capitalizeNext = true; 
+                result.append(c); 
+            } else if (capitalizeNext) { 
+                result.append(Character.toUpperCase(c)); 
+                capitalizeNext = false; 
+            } else { 
+                result.append(Character.toLowerCase(c)); 
+            } 
+        } 
+        return result.toString(); 
+    } 
+} 
+
+//=
+File: utilities/ArrayHelper.java 
+package utilities; 
+import java.util.Arrays; 
+public class ArrayHelper {      
+    public int findMax(int[] arr) { 
+        int max = arr[0]; 
+        for (int num : arr) { 
+            if (num > max) max = num; 
+        } 
+        return max; 
+    }   
+    public int findMin(int[] arr) { 
+        int min = arr[0]; 
+        for (int num : arr) { 
+            if (num < min) min = num; 
+        } 
+        return min; 
+    }    
+    public double findAverage(int[] arr) { 
+        int sum = 0; 
+        for (int num : arr) { 
+            sum += num; 
+        } 
+        return (double) sum / arr.length; 
+    }    
+    public int[] sortArray(int[] arr) { 
+        int[] sorted = arr.clone(); 
+        Arrays.sort(sorted); 
+        return sorted; 
+    }     
+    public int[] reverseArray(int[] arr) { 
+        int[] reversed = new int[arr.length]; 
+        for (int i = 0; i < arr.length; i++) { 
+            reversed[i] = arr[arr.length - 1 - i]; 
+        } 
+        return reversed; 
+    } 
+} 
+
+//=
+File: Experiment5.java (Main class) 
+import mathoperations.BasicMath; 
+import mathoperations.AdvancedMath; 
+import utilities.*; 
+import java.util.Date; 
+import java.util.Random; 
+import java.text.SimpleDateFormat; 
+import java.util.Arrays;  
+public class Experiment5 {      
+    public static void main(String[] args) {       
+        System.out.println("JAVA PACKAGES"); 
+        System.out.println("===== MATH OPERATIONS PACKAGE =====\n"); 
+        BasicMath basicMath = new BasicMath(); 
+        System.out.println("--- Basic Math Operations ---"); 
+        System.out.println("Addition: 15 + 7 = " + basicMath.add(15, 7)); 
+        System.out.println("Subtraction: 20 - 8 = " + basicMath.subtract(20, 8)); 
+        System.out.println("Multiplication: 6 × 9 = " + basicMath.multiply(6, 9)); 
+        System.out.println("Division: 100 ÷ 8 = " + basicMath.divide(100, 8)); 
+        System.out.println();
+        AdvancedMath advMath = new AdvancedMath(); 
+        System.out.println("--- Advanced Math Operations ---"); 
+        System.out.println("Power: 2^10 = " + (int) advMath.power(2, 10)); 
+        System.out.println("Square Root: √144 = " + (int) advMath.squareRoot(144)); 
+        System.out.println("Factorial: 7! = " + advMath.factorial(7)); 
+        System.out.println("Is 97 Prime? " + advMath.isPrime(97)); 
+        System.out.println("Is 100 Prime? " + advMath.isPrime(100)); 
+        System.out.println("\n===== UTILITIES PACKAGE =====\n");
+        StringHelper strHelper = new StringHelper(); 
+        System.out.println("--- String Helper Operations ---"); 
+        String testStr = "Hello World"; 
+        System.out.println("Original: \"" + testStr + "\""); 
+        System.out.println("Reversed: \"" + strHelper.reverse(testStr) + "\""); 
+        System.out.println("Vowel Count: " + strHelper.countVowels(testStr)); 
+        System.out.println("Title Case of 'jAVA proGRAMMING': \"" +  
+                          strHelper.toTitleCase("jAVA proGRAMMING") + "\""); 
+        System.out.println("Is 'A man a plan a canal Panama' palindrome? " +  
+                          strHelper.isPalindrome("A man a plan a canal Panama"));
+        System.out.println();       
+        ArrayHelper arrHelper = new ArrayHelper(); 
+        System.out.println("--- Array Helper Operations ---"); 
+        int[] numbers = {64, 34, 25, 12, 22, 11, 90}; 
+        System.out.println("Original Array: " + Arrays.toString(numbers)); 
+        System.out.println("Maximum: " + arrHelper.findMax(numbers)); 
+        System.out.println("Minimum: " + arrHelper.findMin(numbers)); 
+        System.out.printf("Average: %.2f%n", arrHelper.findAverage(numbers)); 
+        System.out.println("Sorted Array: " + Arrays.toString(arrHelper.sortArray(numbers))); 
+        System.out.println("Reversed Array: " + Arrays.toString(arrHelper.reverseArray(numbers))); 
+        System.out.println("\n===== BUILT-IN JAVA PACKAGES =====\n");         
+        System.out.println("--- java.util.Date and SimpleDateFormat ---"); 
+        Date currentDate = new Date(); 
+        SimpleDateFormat sdf = new SimpleDateFormat("EEEE, MMMM dd, yyyy HH:mm:ss"); 
+        System.out.println("Current Date/Time: " + sdf.format(currentDate));        
+        System.out.println();         
+        System.out.println("--- java.util.Random ---"); 
+        Random rand = new Random(); 
+        System.out.print("5 Random Numbers (1-100): "); 
+        for (int i = 0; i < 5; i++) { 
+            System.out.print(rand.nextInt(100) + 1); 
+            if (i < 4) System.out.print(", "); 
+        } 
+        System.out.println();        
+        System.out.println();         
+        System.out.println("--- java.lang.Math (imported by default) ---"); 
+        System.out.println("PI value: " +Math.PI); 
+        System.out.println("E value: " +Math.E); 
+        System.out.println("Max(45, 78): " +Math.max(45, 78)); 
+        System.out.println("Round(4.7): " +Math.round(4.7)); 
+        System.out.println("Abs(-99): " +Math.abs(-99));         
+    } 
+} 
