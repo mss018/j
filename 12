@@ -1,0 +1,174 @@
+import java.util.LinkedList; 
+import java.util.ListIterator; 
+import java.util.Iterator; 
+public class Experiment12 {
+    public static void displayList(String message, LinkedList<?> list) { 
+        System.out.println(message); 
+        System.out.println("  Content: " + list); 
+        System.out.println("  Size: " + list.size()); 
+        System.out.println(); 
+    }
+    public static void main(String[] args) {
+        System.out.println("===========LinkedList TRAVERSAL using ListIterator==========="); 
+        LinkedList<String> countries = new LinkedList<>(); 
+        countries.add("India"); 
+        countries.add("USA"); 
+        countries.add("UK"); 
+        countries.add("Canada"); 
+        countries.add("Australia"); 
+        countries.add("Germany"); 
+        countries.add("France");         
+        displayList("Initial LinkedList:", countries);
+        System.out.println("===== 1. FORWARD TRAVERSAL =====\n");
+        System.out.println("Using ListIterator to traverse forward:"); 
+        ListIterator<String> forwardIterator = countries.listIterator(); 
+        System.out.println("Index | Element"); 
+        System.out.println("------|--------"); 
+        while (forwardIterator.hasNext()) { 
+            int index = forwardIterator.nextIndex(); 
+            String element = forwardIterator.next(); 
+            System.out.printf("  %d   | %s%n", index, element); 
+        } 
+        System.out.println("\n===== 2. BACKWARD TRAVERSAL =====\n"); 
+        System.out.println("Using ListIterator to traverse backward:"); 
+        System.out.println("(Iterator is now at the end after forward traversal)"); 
+        System.out.println("\nIndex | Element"); 
+        System.out.println("------|--------"); 
+        while (forwardIterator.hasPrevious()) { 
+            int index = forwardIterator.previousIndex(); 
+            String element = forwardIterator.previous(); 
+            System.out.printf("  %d   | %s%n", index, element); 
+        }
+        System.out.println("\n===== 3. TRAVERSAL FROM SPECIFIC INDEX =====\n"); 
+        System.out.println("Starting from index 3:"); 
+        ListIterator<String> midIterator = countries.listIterator(3);
+        System.out.println("\nForward from index 3:"); 
+        while (midIterator.hasNext()) { 
+            System.out.println("  Index " + midIterator.nextIndex() + ": " + midIterator.next()); 
+        }  
+        System.out.println("\nBackward from current position:"); 
+        while (midIterator.hasPrevious()) { 
+            System.out.println("  Index " + midIterator.previousIndex() + ": " + midIterator.previous()); 
+        } 
+        System.out.println("\n===== 4. MODIFY ELEMENTS USING set() =====\n");
+        displayList("Before modification:", countries);
+        ListIterator<String> modifyIterator = countries.listIterator(); 
+        while (modifyIterator.hasNext()) { 
+            String current = modifyIterator.next(); 
+            if (current.equals("USA")) { 
+                modifyIterator.set("United States"); 
+                System.out.println("  Changed 'USA' to 'United States'"); 
+            } 
+            if (current.equals("UK")) { 
+                modifyIterator.set("United Kingdom"); 
+                System.out.println("  Changed 'UK' to 'United Kingdom'"); 
+            } 
+        }
+        displayList("\nAfter modification:", countries);
+        System.out.println("===== 5. ADD ELEMENTS USING add() =====\n");
+        displayList("Before adding:", countries); 
+        ListIterator<String> addIterator = countries.listIterator(); 
+        while (addIterator.hasNext()) { 
+            String current = addIterator.next(); 
+            if (current.equals("Canada")) { 
+                addIterator.add("Japan");  
+                System.out.println("  Added 'Japan' after 'Canada'"); 
+            } 
+        } 
+        addIterator = countries.listIterator(); 
+        addIterator.add("Brazil"); 
+        System.out.println("  Added 'Brazil' at beginning"); 
+         
+        displayList("\nAfter adding:", countries);
+        System.out.println("===== 6. REMOVE ELEMENTS USING remove() =====\n");
+        displayList("Before removal:", countries); 
+        ListIterator<String> removeIterator = countries.listIterator(); 
+        while (removeIterator.hasNext()) { 
+            String current = removeIterator.next(); 
+            if (current.equals("Japan") || current.equals("Brazil")) { 
+                removeIterator.remove(); 
+                System.out.println("  Removed '" + current + "'"); 
+            } 
+        } 
+        displayList("\nAfter removal:", countries);
+        System.out.println("===== 7. nextIndex() and previousIndex() =====\n"); 
+        ListIterator<String> indexIterator = countries.listIterator(3); 
+        System.out.println("Iterator positioned at index 3:"); 
+        System.out.println("  nextIndex(): " + indexIterator.nextIndex()); 
+        System.out.println("  previousIndex(): " + indexIterator.previousIndex()); 
+        System.out.println("\nMoving forward one step:"); 
+        indexIterator.next(); 
+        System.out.println("  nextIndex(): " + indexIterator.nextIndex()); 
+        System.out.println("  previousIndex(): " + indexIterator.previousIndex()); 
+        System.out.println("\nMoving backward one step:"); 
+        indexIterator.previous(); 
+        System.out.println("  nextIndex(): " + indexIterator.nextIndex()); 
+        System.out.println("  previousIndex(): " + indexIterator.previousIndex());  
+        System.out.println("\n===== 8. COMPARISON: Iterator vs ListIterator =====\n"); 
+        System.out.println("Using Iterator (forward only):"); 
+        Iterator<String> simpleIterator = countries.iterator(); 
+        System.out.print("  "); 
+        while (simpleIterator.hasNext()) { 
+            System.out.print(simpleIterator.next() + " -> "); 
+        } 
+        System.out.println("END"); 
+        System.out.println("\nListIterator advantages over Iterator:"); 
+        System.out.println("   Bidirectional traversal (forward and backward)"); 
+        System.out.println("   Can add elements during iteration"); 
+        System.out.println("   Can modify elements using set()"); 
+        System.out.println("   Can get current index (nextIndex/previousIndex)"); 
+        System.out.println("   Can start from any position"); 
+        System.out.println("\n===== 9. LinkedList-SPECIFIC OPERATIONS =====\n");
+        LinkedList<Integer> numbers = new LinkedList<>(); 
+        for (int i = 1; i <= 10; i++) { 
+            numbers.add(i * 10); 
+        } 
+        displayList("Integer LinkedList:", numbers);  
+        System.out.println("LinkedList as Deque:"); 
+        System.out.println("  getFirst(): " + numbers.getFirst()); 
+        System.out.println("  getLast(): " + numbers.getLast()); 
+        System.out.println("  peekFirst(): " + numbers.peekFirst()); 
+        System.out.println("  peekLast(): " + numbers.peekLast()); 
+        numbers.addFirst(5); 
+        numbers.addLast(105); 
+        displayList("\nAfter addFirst(5) and addLast(105):", numbers); 
+         
+        System.out.println("pollFirst(): " + numbers.pollFirst()); 
+        System.out.println("pollLast(): " + numbers.pollLast()); 
+        displayList("\nAfter pollFirst() and pollLast():", numbers);
+        System.out.println("LinkedList as Stack:"); 
+        numbers.push(0); 
+        System.out.println("  After push(0): " + numbers); 
+        System.out.println("  pop(): " + numbers.pop()); 
+        System.out.println("  After pop(): " + numbers);
+        System.out.println("\n===== 10. COMPLETE BIDIRECTIONAL TRAVERSAL DEMO =====\n"); 
+        LinkedList<String> letters = new LinkedList<>(); 
+        letters.add("A"); 
+        letters.add("B"); 
+        letters.add("C"); 
+        letters.add("D"); 
+        letters.add("E"); 
+        System.out.println("LinkedList: " + letters); 
+        System.out.println("\nZigzag traversal (forward-backward-forward):");
+        ListIterator<String> zigzagIterator = letters.listIterator(); 
+        System.out.println("\nPhase 1: Forward (A to E)"); 
+        System.out.print("  "); 
+        while (zigzagIterator.hasNext()) { 
+            System.out.print("[" + zigzagIterator.nextIndex() + "]" +  
+                           zigzagIterator.next() + " "); 
+        }
+        System.out.println("\n\nPhase 2: Backward (E to A)"); 
+        System.out.print("  "); 
+        while (zigzagIterator.hasPrevious()) { 
+            System.out.print("[" + zigzagIterator.previousIndex() + "]" +  
+                           zigzagIterator.previous() + " "); 
+        }
+        System.out.println("\n\nPhase 3: Forward again (A to E)"); 
+        System.out.print("  "); 
+        while (zigzagIterator.hasNext()) { 
+            System.out.print("[" + zigzagIterator.nextIndex() + "]" +  
+                           zigzagIterator.next() + " "); 
+        } 
+        System.out.println("\n\n===== PROGRAM COMPLETED ====="); 
+    } 
+}
