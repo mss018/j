@@ -1,0 +1,93 @@
+public class Experiment9 {
+    public static void main(String[] args) throws Exception {
+        System.out.println("1. THREAD CREATION");
+        Thread t1 = new Thread() {
+            public void run() {
+                for(int i=1;i<=5;i++) System.out.println("Number: "+i);
+            }
+        };
+        Thread t2 = new Thread(() -> {
+            for(char c='A';c<='E';c++) System.out.println("Letter: "+c);
+        });
+        t1.start(); t2.start();
+        t1.join(); t2.join();
+        Thread t = Thread.currentThread();
+        System.out.println("\n2. THREAD INFORMATION");
+        System.out.println("Name: "+t.getName());
+        System.out.println("Priority: "+t.getPriority());
+        System.out.println("State: "+t.getState());
+        System.out.println("\n3. SYNCHRONIZATION");
+        Counter c = new Counter();
+        Thread a = new Thread(() -> { for(int i=0;i<1000;i++) c.inc(); });
+        Thread b = new Thread(() -> { for(int i=0;i<1000;i++) c.inc(); });
+        a.start(); b.start();
+        a.join(); b.join();
+        System.out.println("Count: "+c.get());
+        System.out.println("\n4. THREAD PRIORITY");
+        Thread low = new Thread(() -> System.out.println("Low Priority"));
+        Thread high = new Thread(() -> System.out.println("High Priority"));
+        low.setPriority(Thread.MIN_PRIORITY);
+        high.setPriority(Thread.MAX_PRIORITY);
+        low.start(); high.start();
+        low.join(); high.join();
+        System.out.println("\n5. PRODUCER-CONSUMER");
+        Buffer buf = new Buffer();
+        Thread p = new Thread(() -> {
+            try {
+                for(int i=1;i<=3;i++) buf.put(i);
+            } catch(Exception e){}
+        });
+        Thread q = new Thread(() -> {
+            try {
+                for(int i=1;i<=3;i++) buf.get();
+            } catch(Exception e){}
+        });
+        p.start(); q.start();
+        p.join(); q.join();
+        System.out.println("\n6. LAMBDA THREAD");
+        Thread l = new Thread(() -> {
+            for(int i=1;i<=3;i++) System.out.println("Lambda: "+i);
+        });
+        l.start(); l.join();
+        System.out.println("\n7. SLEEP AND INTERRUPT");
+        Thread s = new Thread(() -> {
+            try {
+                Thread.sleep(3000);
+                System.out.println("Awake");
+            } catch(Exception e) {
+                System.out.println("Interrupted");
+            }
+        });
+        s.start();
+        Thread.sleep(500);
+        s.interrupt();
+        s.join();
+        System.out.println("\n8. DAEMON THREAD");
+        Thread d = new Thread(() -> System.out.println("Daemon running"));
+        d.setDaemon(true);
+        d.start();
+        System.out.println("\nPROGRAM COMPLETED");
+    }
+}
+class Counter {
+    int n = 0;
+    synchronized void inc() { n++; }
+    int get() { return n; }
+}
+class Buffer {
+    int data;
+    boolean ready = false;
+    synchronized void put(int x) throws Exception {
+        while(ready) wait();
+        data = x;
+        ready = true;
+        System.out.println("Produced: "+x);
+        notify();
+    }
+    synchronized void get() throws Exception {
+        while(!ready) wait();
+        System.out.println("Consumed: "+data);
+        ready = false;
+        notify();
+    }
+}
