@@ -1,0 +1,264 @@
+public class Experiment4 { 
+    public static void main(String[] args) { 
+        System.out.println("========== SINGLE INHERITANCE =========="); 
+        System.out.println("(Animal -> Dog)\n"); 
+        Dog dog = new Dog("Buddy", "Golden Retriever"); 
+        dog.displayInfo(); 
+        dog.eat(); 
+        dog.sleep(); 
+        dog.bark(); 
+        System.out.println("\n========== MULTILEVEL INHERITANCE =========="); 
+        System.out.println("(LivingBeing -> Human -> Employee)\n"); 
+        Employee emp = new Employee("John Doe", "EMP001", "Engineering"); 
+        emp.displayDetails(); 
+        emp.breathe(); 
+        emp.speak(); 
+        emp.work(); 
+        System.out.println("\n========== HIERARCHICAL INHERITANCE =========="); 
+        System.out.println("(Shape -> Circle, Rectangle, Triangle)\n");      
+        Circle circle = new Circle("Red", 5.0); 
+        circle.display();         
+        System.out.println();        
+        Rectangle rect = new Rectangle("Blue", 10.0, 6.0); 
+        rect.display();        
+        System.out.println();       
+        Triangle tri = new Triangle("Green", 8.0, 5.0); 
+        tri.display(); 
+        System.out.println("\n========== HYBRID INHERITANCE =========="); 
+        System.out.println("(Machine + Printable/Scannable interfaces)\n");         
+        System.out.println("--- Printer ---"); 
+        Printer printer = new Printer("HP", "LaserJet Pro"); 
+        printer.powerOn(); 
+        printer.print(); 
+        printer.powerOff();         
+        System.out.println("\n--- Scanner ---"); 
+        Scanner scanner = new Scanner("Canon", "CanoScan LiDE"); 
+        scanner.powerOn(); 
+        scanner.scan(); 
+        scanner.powerOff();         
+        System.out.println("\n--- All-in-One Printer ---"); 
+        AllInOnePrinter allinone = new AllInOnePrinter("Epson", "EcoTank ET-4850"); 
+        allinone.powerOn(); 
+        allinone.print(); 
+        allinone.scan(); 
+        allinone.copy(); 
+        allinone.powerOff(); 
+    } 
+} 
+//  SINGLE INHERITANCE 
+class Animal { 
+    String name; 
+     
+    public void eat() { 
+        System.out.println(name + " is eating."); 
+    } 
+     
+    public void sleep() { 
+        System.out.println(name + " is sleeping."); 
+    } 
+} 
+ 
+class Dog extends Animal { 
+    String breed; 
+     
+    public Dog(String name, String breed) { 
+        this.name = name; 
+        this.breed = breed; 
+    } 
+     
+    public void bark() { 
+        System.out.println(name + " is barking!"); 
+    } 
+     
+    public void displayInfo() { 
+        System.out.println("Name: " + name + ", Breed: " + breed); 
+    } 
+} 
+ 
+// MULTILEVEL INHERITANCE
+class LivingBeing { 
+    public void breathe() { 
+        System.out.println("Breathing..."); 
+    } 
+} 
+ 
+class Human extends LivingBeing { 
+    String name; 
+     
+    public Human(String name) { 
+        this.name = name; 
+    } 
+     
+    public void speak() { 
+        System.out.println(name + " is speaking."); 
+    } 
+} 
+ 
+class Employee extends Human { 
+    String employeeId; 
+    String department; 
+     
+    public Employee(String name, String employeeId, String department) { 
+        super(name); 
+        this.employeeId = employeeId; 
+        this.department = department; 
+    } 
+     
+    public void work() { 
+        System.out.println(name + " is working in " + department + " department."); 
+    } 
+     
+    public void displayDetails() { 
+        System.out.println("Employee: " + name + " | ID: " + employeeId + " | Dept: " + department); 
+    } 
+} 
+ 
+//HIERARCHICAL INHERITANCE 
+class Shape { 
+    String color; 
+     
+    public Shape(String color) { 
+        this.color = color; 
+    } 
+     
+    public void displayColor() { 
+        System.out.println("Color: " + color); 
+    } 
+     
+    public double calculateArea() { 
+        return 0; 
+    } 
+} 
+ 
+class Circle extends Shape { 
+    double radius; 
+     
+    public Circle(String color, double radius) { 
+        super(color); 
+        this.radius = radius; 
+    } 
+     
+    @Override 
+    public double calculateArea() { 
+        return Math.PI * radius * radius; 
+    } 
+     
+    public void display() { 
+        System.out.println("Circle - Radius: " + radius); 
+        displayColor(); 
+        System.out.printf("Area: %.2f%n", calculateArea()); 
+    } 
+} 
+ 
+class Rectangle extends Shape { 
+    double length, width; 
+     
+    public Rectangle(String color, double length, double width) { 
+        super(color); 
+        this.length = length; 
+        this.width = width; 
+    } 
+     
+    @Override 
+    public double calculateArea() { 
+        return length * width; 
+    } 
+     
+    public void display() { 
+        System.out.println("Rectangle - Length: " + length + ", Width: " + width); 
+        displayColor(); 
+        System.out.printf("Area: %.2f%n", calculateArea()); 
+    } 
+} 
+ 
+class Triangle extends Shape { 
+    double base, height; 
+     
+    public Triangle(String color, double base, double height) { 
+        super(color); 
+        this.base = base; 
+        this.height = height; 
+    } 
+     
+    @Override 
+    public double calculateArea() { 
+        return 0.5 * base * height; 
+    } 
+     
+    public void display() { 
+        System.out.println("Triangle - Base: " + base + ", Height: " + height); 
+        displayColor(); 
+        System.out.printf("Area: %.2f%n", calculateArea()); 
+    } 
+} 
+ 
+//HYBRID INHERITANCE 
+
+ 
+interface Printable { 
+    void print(); 
+} 
+ 
+interface Scannable { 
+    void scan(); 
+} 
+ 
+class Machine { 
+    String brand; 
+    String model; 
+     
+    public Machine(String brand, String model) { 
+        this.brand = brand; 
+        this.model = model; 
+    } 
+     
+    public void powerOn() { 
+        System.out.println(brand + " " + model + " is powered ON."); 
+    } 
+     
+    public void powerOff() { 
+        System.out.println(brand + " " + model + " is powered OFF."); 
+    } 
+} 
+ 
+class Printer extends Machine implements Printable { 
+    public Printer(String brand, String model) { 
+        super(brand, model); 
+    } 
+     
+    @Override 
+    public void print() { 
+        System.out.println("Printing document using " + brand + " " + model); 
+    } 
+} 
+ 
+class Scanner extends Machine implements Scannable { 
+    public Scanner(String brand, String model) { 
+        super(brand, model); 
+    } 
+     
+    @Override 
+    public void scan() { 
+        System.out.println("Scanning document using " + brand + " " + model); 
+    } 
+} 
+ 
+class AllInOnePrinter extends Machine implements Printable, Scannable { 
+    public AllInOnePrinter(String brand, String model) { 
+        super(brand, model); 
+    } 
+     
+    @Override 
+    public void print() { 
+        System.out.println("Printing using All-in-One: " + brand + " " + model); 
+    } 
+     
+    @Override 
+    public void scan() { 
+        System.out.println("Scanning using All-in-One: " + brand + " " + model); 
+    } 
+     
+    public void copy() { 
+        System.out.println("Copying document using " + brand + " " + model); 
+    } 
+}
