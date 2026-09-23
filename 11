@@ -1,0 +1,151 @@
+import java.util.ArrayList; 
+import java.util.Arrays; 
+import java.util.Collections; 
+import java.util.Iterator; 
+import java.util.ListIterator; 
+public class Experiment11 { 
+    public static void displayList(String message, ArrayList<?> list) { 
+        System.out.println(message); 
+        System.out.println("  Content: " + list); 
+        System.out.println("  Size: " + list.size()); 
+        System.out.println(); 
+    }
+    public static void main(String[] args) {
+        System.out.println("===========ArrayList INSERTION & DELETION===========");
+        ArrayList<String> fruits = new ArrayList<>(); 
+        System.out.println("========== INSERTION OPERATIONS ==========\n"); 
+        System.out.println("1. add(element) - Adding elements at end:"); 
+        fruits.add("Apple"); 
+        fruits.add("Banana"); 
+        fruits.add("Cherry"); 
+        displayList("   After adding Apple, Banana, Cherry:", fruits);
+        System.out.println("2. add(index, element) - Insert at specific position:"); 
+        fruits.add(1, "Mango");  
+        displayList("   After adding Mango at index 1:", fruits);
+        fruits.add(0, "Grapes");   
+        displayList("   After adding Grapes at index 0:", fruits);
+        System.out.println("3. addAll(collection) - Adding multiple elements:"); 
+        ArrayList<String> moreFruits = new ArrayList<>(Arrays.asList("Orange", "Kiwi", "Papaya")); 
+        fruits.addAll(moreFruits); 
+        displayList("   After addAll([Orange, Kiwi, Papaya]):", fruits);
+        System.out.println("4. addAll(index, collection) - Insert collection at position:"); 
+        ArrayList<String> berries = new ArrayList<>(Arrays.asList("Strawberry", "Blueberry")); 
+        fruits.addAll(3, berries); 
+        displayList("   After addAll(3, [Strawberry, Blueberry]):", fruits);
+        System.out.println("5. set(index, element) - Replace element:"); 
+        String oldValue = fruits.set(0, "Green Grapes"); 
+        System.out.println("   Replaced '" + oldValue + "' with 'Green Grapes' at index 0"); 
+        displayList("   After replacement:", fruits);
+        System.out.println("========== DELETION OPERATIONS ==========\n");
+        System.out.println("Current ArrayList:"); 
+        displayList("", fruits); 
+        System.out.println("6. remove(index) - Remove by index:"); 
+        String removed = fruits.remove(0); 
+        System.out.println("   Removed element at index 0: " + removed); 
+        displayList("   After removal:", fruits);
+        System.out.println("7. remove(object) - Remove by object:"); 
+        boolean isRemoved = fruits.remove("Kiwi"); 
+        System.out.println("   Removed 'Kiwi': " + isRemoved); 
+        displayList("   After removal:", fruits);
+        isRemoved = fruits.remove("Watermelon"); 
+        System.out.println("   Removed 'Watermelon' (not in list): " + isRemoved); 
+        System.out.println("\n8. removeAll(collection) - Remove multiple elements:"); 
+        ArrayList<String> toRemove = new ArrayList<>(Arrays.asList("Strawberry", "Blueberry")); 
+        fruits.removeAll(toRemove); 
+        System.out.println("   Removed all berries: " + toRemove); 
+        displayList("   After removeAll:", fruits);
+        System.out.println("9. removeIf(predicate) - Conditional removal:");
+        fruits.addAll(Arrays.asList("Apricot", "Avocado", "Plum")); 
+        System.out.println("   Added: Apricot, Avocado, Plum"); 
+        displayList("   Current list:", fruits);
+        fruits.removeIf(fruit -> fruit.startsWith("A")); 
+        System.out.println("   Removed all fruits starting with 'A'"); 
+        displayList("   After removeIf:", fruits);  
+        System.out.println("10. Remove using Iterator:"); 
+        fruits.addAll(Arrays.asList("Peach", "Pear", "Plum")); 
+        displayList("   Added Peach, Pear, Plum:", fruits);
+        Iterator<String> iterator = fruits.iterator(); 
+        while (iterator.hasNext()) { 
+            String fruit = iterator.next(); 
+            if (fruit.startsWith("P")) { 
+                iterator.remove(); 
+                System.out.println("   Removed: " + fruit); 
+            } 
+        } 
+        displayList("   After removing fruits starting with 'P':", fruits);
+        System.out.println("11. retainAll(collection) - Keep only specified elements:"); 
+        fruits.addAll(Arrays.asList("Apple", "Banana", "Cherry", "Date", "Elderberry")); 
+        displayList("   Added more fruits:", fruits); 
+        ArrayList<String> toRetain = new ArrayList<>(Arrays.asList("Apple", "Banana", "Cherry")); 
+        fruits.retainAll(toRetain); 
+        System.out.println("   Retained only: " + toRetain); 
+        displayList("   After retainAll:", fruits);
+        System.out.println("12. clear() - Remove all elements:"); 
+        fruits.clear(); 
+        displayList("   After clear():", fruits); 
+        System.out.println("   isEmpty(): " + fruits.isEmpty());
+        System.out.println("\n========== OTHER ArrayList OPERATIONS ==========\n"); 
+        fruits = new ArrayList<>(Arrays.asList( 
+            "Apple", "Banana", "Cherry", "Date", "Apple", "Elderberry", "Apple" 
+        )); 
+        displayList("Reinitialized ArrayList:", fruits); 
+        System.out.println("13. Search Operations:"); 
+        System.out.println("   contains('Banana'): " + fruits.contains("Banana")); 
+        System.out.println("   contains('Mango'): " + fruits.contains("Mango")); 
+        System.out.println("   indexOf('Apple'): " + fruits.indexOf("Apple")); 
+        System.out.println("   lastIndexOf('Apple'): " + fruits.lastIndexOf("Apple")); 
+        System.out.println("   get(2): " + fruits.get(2));
+        System.out.println("\n14. toArray():"); 
+        Object[] array = fruits.toArray(); 
+        System.out.println("   Array: " + Arrays.toString(array));
+        String[] strArray = fruits.toArray(new String[0]); 
+        System.out.println("   String Array: " + Arrays.toString(strArray));
+        System.out.println("\n15. subList(fromIndex, toIndex):"); 
+        System.out.println("   subList(1, 4): " + fruits.subList(1, 4));
+        System.out.println("\n16. Sorting:"); 
+        Collections.sort(fruits); 
+        displayList("   After Collections.sort():", fruits);
+        Collections.sort(fruits, Collections.reverseOrder()); 
+        displayList("   After reverse sort:", fruits);
+        System.out.println("17. Iteration Methods:");
+        System.out.println("   Using for-each loop:"); 
+        System.out.print("   "); 
+        for (String fruit : fruits) { 
+            System.out.print(fruit + " "); 
+        } 
+        System.out.println();
+        System.out.println("\n   Using forEach with lambda:"); 
+        System.out.print("   "); 
+        fruits.forEach(fruit -> System.out.print(fruit + " | ")); 
+        System.out.println();
+        System.out.println("\n   Using ListIterator (bidirectional):"); 
+        ListIterator<String> listIterator = fruits.listIterator(); 
+        System.out.print("   Forward: "); 
+        while (listIterator.hasNext()) { 
+            System.out.print(listIterator.next() + " "); 
+        } 
+        System.out.print("\n   Backward: "); 
+        while (listIterator.hasPrevious()) { 
+            System.out.print(listIterator.previous() + " "); 
+        } 
+        System.out.println(); 
+        System.out.println("\n========== ArrayList with Integers ==========\n");   
+        ArrayList<Integer> numbers = new ArrayList<>(Arrays.asList(5, 2, 8, 1, 9, 3, 7)); 
+        displayList("Integer ArrayList:", numbers);
+        numbers.add(10); 
+        numbers.add(0, 0); 
+        displayList("After adding 10 at end and 0 at beginning:", numbers); 
+        numbers.remove(Integer.valueOf(5)); 
+        System.out.println("Removed Integer 5");       
+        numbers.remove(0); 
+        System.out.println("Removed element at index 0"); 
+        displayList("After removals:", numbers);
+        Collections.sort(numbers); 
+        displayList("After sorting:", numbers); 
+        int sum = numbers.stream().mapToInt(Integer::intValue).sum(); 
+        System.out.println("Sum of elements: " + sum); 
+        System.out.println("Max element: " + Collections.max(numbers)); 
+        System.out.println("Min element: " + Collections.min(numbers));         
+        System.out.println("\n===== PROGRAM COMPLETED ====="); 
+    } 
+} 
