@@ -1,0 +1,226 @@
+import java.io.*; 
+import java.util.Scanner; 
+public class Experiment10 {  
+    private static final String FILE_DIR = "./";     
+    public static void main(String[] args) {
+        System.out.println("============FILE HANDLING IN JAVA=========="); 
+        System.out.println("===== 1. FileOutputStream (Byte Stream - Writing) ====="); 
+        String byteFile = FILE_DIR + "bytes_demo.txt";
+        try (FileOutputStream fos = new FileOutputStream(byteFile)) { 
+            String data = "Hello, this is written using FileOutputStream!\n"; 
+            byte[] bytes = data.getBytes(); 
+            fos.write(bytes); 
+            fos.write('J'); 
+            fos.write('A'); 
+            fos.write('V'); 
+            fos.write('A'); 
+            fos.write('\n'); 
+            System.out.println("Data written to " + byteFile); 
+            System.out.println("Content: " + data + "JAVA"); 
+        } catch (IOException e) { 
+            System.out.println("Error: " + e.getMessage()); 
+        }
+        System.out.println("\n===== 2. FileInputStream (Byte Stream - Reading) ====="); 
+        try (FileInputStream fis = new FileInputStream(byteFile)) { 
+            System.out.println("Reading from " + byteFile + ":"); 
+            int byteData; 
+            StringBuilder content = new StringBuilder(); 
+            while ((byteData = fis.read()) != -1) { 
+                content.append((char) byteData); 
+            } 
+            System.out.println(content); 
+        } catch (IOException e) { 
+            System.out.println("Error: " + e.getMessage()); 
+        }
+        System.out.println("===== 3. FileWriter (Character Stream - Writing) ====="); 
+        String charFile = FILE_DIR + "chars_demo.txt"; 
+        try (FileWriter fw = new FileWriter(charFile)) { 
+            fw.write("Line 1: FileWriter writes characters directly.\n"); 
+            fw.write("Line 2: It's better for text files.\n"); 
+            fw.write("Line 3: Characters are converted to bytes automatically.\n");  
+            char[] chars = {'J', 'a', 'v', 'a', ' ', 'I', '/', 'O', '\n'}; 
+            fw.write(chars); 
+            System.out.println("Data written to " + charFile); 
+        } catch (IOException e) { 
+            System.out.println("Error: " + e.getMessage()); 
+        } 
+        System.out.println("\n===== 4. FileReader (Character Stream - Reading) =====");
+        try (FileReader fr = new FileReader(charFile)) { 
+            System.out.println("Reading from " + charFile + ":"); 
+            int charData; 
+            while ((charData = fr.read()) != -1) { 
+                System.out.print((char) charData); 
+            } 
+        } catch (IOException e) { 
+            System.out.println("Error: " + e.getMessage()); 
+        }
+        System.out.println("\n===== 5. BufferedWriter (Buffered Character Stream) ====="); 
+        String bufferedFile = FILE_DIR + "buffered_demo.txt";
+        try (BufferedWriter bw = new BufferedWriter(new FileWriter(bufferedFile))) { 
+            bw.write("BufferedWriter provides efficient writing."); 
+            bw.newLine(); 
+            bw.write("It buffers characters for efficient writing."); 
+            bw.newLine(); 
+            bw.write("This reduces the number of I/O operations."); 
+            bw.newLine();
+            String[] lines = {"Line 4: Array element 1",  
+                             "Line 5: Array element 2",  
+                             "Line 6: Array element 3"}; 
+            for (String line : lines) { 
+                bw.write(line); 
+                bw.newLine(); 
+            }     
+            System.out.println("Data written to " + bufferedFile); 
+        } catch (IOException e) { 
+            System.out.println("Error: " + e.getMessage()); 
+        }
+        System.out.println("\n===== 6. BufferedReader (Reading line by line) =====");       
+        try (BufferedReader br = new BufferedReader(new FileReader(bufferedFile))) { 
+            System.out.println("Reading from " + bufferedFile + ":"); 
+            String line; 
+            int lineNumber = 1; 
+            while ((line = br.readLine()) != null) { 
+                System.out.println(lineNumber++ + ": " + line); 
+            } 
+        } catch (IOException e) { 
+            System.out.println("Error: " + e.getMessage()); 
+        }
+        System.out.println("\n===== 7. PrintWriter (Formatted Output) ====="); 
+        String printFile = FILE_DIR + "print_demo.txt";
+        try (PrintWriter pw = new PrintWriter(new FileWriter(printFile))) { 
+            pw.println("PrintWriter Demo"); 
+            pw.println("================"); 
+            pw.printf("Formatted integer: %d%n", 42); 
+            pw.printf("Formatted float: %.2f%n", 3.14159); 
+            pw.printf("Formatted string: %s%n", "Hello Java"); 
+            pw.printf("%-15s %5d %10.2f%n", "Product A", 10, 99.99); 
+            pw.printf("%-15s %5d %10.2f%n", "Product B", 25, 149.50); 
+            pw.printf("%-15s %5d %10.2f%n", "Product C", 5, 299.99);
+            System.out.println("Formatted data written to " + printFile); 
+        } catch (IOException e) { 
+            System.out.println("Error: " + e.getMessage()); 
+        }
+        System.out.println("\nContent of " + printFile + ":"); 
+        try (BufferedReader br = new BufferedReader(new FileReader(printFile))) { 
+            String line; 
+            while ((line = br.readLine()) != null) { 
+                System.out.println(line); 
+            } 
+        } catch (IOException e) { 
+            System.out.println("Error: " + e.getMessage()); 
+        } 
+        System.out.println("\n===== 8. File Class Operations ====="); 
+        String testFile = FILE_DIR + "test_file.txt"; 
+        File file = new File(testFile); 
+         
+        try {
+            if (file.createNewFile()) { 
+                System.out.println("File created: " + file.getName()); 
+            } else { 
+                System.out.println("File already exists."); 
+            }
+            try (FileWriter fw = new FileWriter(file)) { 
+                fw.write("Test content for file operations demo."); 
+            } 
+            System.out.println("\nFile Properties:"); 
+            System.out.println("  Name: " + file.getName()); 
+            System.out.println("  Absolute Path: " + file.getAbsolutePath()); 
+            System.out.println("  Parent: " + file.getParent()); 
+            System.out.println("  Exists: " + file.exists()); 
+            System.out.println("  Is File: " + file.isFile()); 
+            System.out.println("  Is Directory: " + file.isDirectory()); 
+            System.out.println("  Can Read: " + file.canRead()); 
+            System.out.println("  Can Write: " + file.canWrite()); 
+            System.out.println("  Can Execute: " + file.canExecute()); 
+            System.out.println("  Is Hidden: " + file.isHidden()); 
+            System.out.println("  Size: " + file.length() + " bytes"); 
+            System.out.println("  Last Modified: " + new java.util.Date(file.lastModified()));     
+        } catch (IOException e) { 
+            System.out.println("Error: " + e.getMessage()); 
+        } 
+        System.out.println("\n===== 9. Directory Operations ====="); 
+        File dir = new File(FILE_DIR + "test_directory"); 
+        if (dir.mkdir()) { 
+            System.out.println("Directory created: " + dir.getName()); 
+        } else { 
+            System.out.println("Directory already exists or couldn't be created."); 
+        } 
+        for (int i = 1; i <= 3; i++) { 
+            File f = new File(dir, "file" + i + ".txt"); 
+            try { 
+                f.createNewFile(); 
+                try (FileWriter fw = new FileWriter(f)) { 
+                    fw.write("Content of file " + i); 
+                } 
+            } catch (IOException e) { 
+                System.out.println("Error creating file: " + e.getMessage()); 
+            } 
+        } 
+        System.out.println("\nFiles in " + dir.getName() + ":"); 
+        File[] files = dir.listFiles(); 
+        if (files != null) { 
+            for (File f : files) { 
+                System.out.println("  " + f.getName() + " (" + f.length() + " bytes)"); 
+            } 
+        } 
+        System.out.println("\n===== 10. Copy File Content ====="); 
+        String sourceFile = FILE_DIR + "chars_demo.txt"; 
+        String destFile = FILE_DIR + "copy_demo.txt";
+        try (BufferedReader reader = new BufferedReader(new FileReader(sourceFile)); 
+             BufferedWriter writer = new BufferedWriter(new FileWriter(destFile))) { 
+            String line; 
+            while ((line = reader.readLine()) != null) { 
+                writer.write(line); 
+                writer.newLine(); 
+            } 
+            System.out.println("File copied from " + sourceFile + " to " + destFile);    
+        } catch (IOException e) { 
+            System.out.println("Error: " + e.getMessage()); 
+        }
+        System.out.println("\n===== 11. Append to File ====="); 
+        String appendFile = FILE_DIR + "append_demo.txt"; 
+        try (FileWriter fw = new FileWriter(appendFile)) { 
+            fw.write("Initial content.\n"); 
+        } catch (IOException e) { 
+            System.out.println("Error: " + e.getMessage()); 
+        }
+        try (FileWriter fw = new FileWriter(appendFile, true)) { 
+            fw.write("Appended content 1.\n"); 
+            fw.write("Appended content 2.\n"); 
+            fw.write("Appended content 3.\n"); 
+            System.out.println("Content appended to " + appendFile); 
+        } catch (IOException e) { 
+            System.out.println("Error: " + e.getMessage()); 
+        }
+        System.out.println("\nContent of " + appendFile + ":"); 
+        try (BufferedReader br = new BufferedReader(new FileReader(appendFile))) { 
+            String line; 
+            while ((line = br.readLine()) != null) { 
+                System.out.println(line); 
+            } 
+        } catch (IOException e) { 
+            System.out.println("Error: " + e.getMessage()); 
+        }
+        System.out.println("\n===== CLEANUP ====="); 
+        String[] filesToDelete = {byteFile, charFile, bufferedFile, printFile,  
+                                   testFile, destFile, appendFile};
+        for (String fileName : filesToDelete) { 
+            File f = new File(fileName); 
+            if (f.delete()) { 
+                System.out.println("Deleted: " + f.getName()); 
+            } 
+        }
+        if (dir.exists()) { 
+            File[] dirFiles = dir.listFiles(); 
+            if (dirFiles != null) { 
+                for (File f : dirFiles) { 
+                    f.delete(); 
+                } 
+            } 
+            if (dir.delete()) { 
+                System.out.println("Deleted directory: " + dir.getName()); 
+            } 
+        }
+        System.out.println("\n===== FILE HANDLING DEMO COMPLETED ====="); 
+    } 
+} 
