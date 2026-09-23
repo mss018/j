@@ -1,0 +1,123 @@
+public class Experiment3 { 
+    public static void main(String[] args) {     
+        System.out.println("===== CALCULATOR - METHOD OVERLOADING =====\n"); 
+        Calculator calc = new Calculator(); 
+        System.out.println("--- Overloading by Number of Parameters ---"); 
+        System.out.println("Result: " + calc.add(10, 20)); 
+        System.out.println("Result: " + calc.add(10, 20, 30)); 
+        System.out.println("Result: " + calc.add(10, 20, 30, 40)); 
+        System.out.println("\n--- Overloading by Type of Parameters ---"); 
+        System.out.println("Result: " + calc.add(10.5, 20.5)); 
+        System.out.println("Result: " + calc.add(5.5f, 4.5f)); 
+        System.out.println("Result: " + calc.add("Hello", " World")); 
+        System.out.println("\n--- Overloading by Order of Parameters ---"); 
+        System.out.println("Result: " + calc.add("Value: ", 100)); 
+        System.out.println("Result: " + calc.add(200, " is the number")); 
+        System.out.println("\n--- Multiply Operations ---"); 
+        System.out.println("multiply(5, 3) = " + calc.multiply(5, 3)); 
+        System.out.println("multiply(2.5, 4.0) = " + calc.multiply(2.5, 4.0)); 
+        System.out.println("multiply(2, 3, 4) = " + calc.multiply(2, 3, 4));    
+        System.out.println("\n===== AREA CALCULATOR - METHOD OVERLOADING =====\n"); 
+        AreaCalculator area = new AreaCalculator();     
+        System.out.printf("Area = %.2f sq units%n%n", area.calculateArea(7.0)); 
+        System.out.printf("Area = %.2f sq units%n%n", area.calculateArea(10.0, 5.0)); 
+        System.out.printf("Area = %.2f sq units%n%n", area.calculateArea(8.0, 6.0, "triangle")); 
+        System.out.printf("Area = %.2f sq units%n%n", area.calculateArea(5));   
+        System.out.println("===== DISPLAY HELPER - METHOD OVERLOADING =====\n"); 
+        DisplayHelper dh = new DisplayHelper();    
+        dh.display(42); 
+        dh.display(3.14159); 
+        dh.display("Hello Java!"); 
+        dh.display(new int[]{1, 2, 3, 4, 5}); 
+        System.out.println(); 
+        dh.display("Java is awesome!", 3); 
+    } 
+} 
+class Calculator { 
+    public int add(int a, int b) { 
+        System.out.println("add(int, int) called"); 
+        return a + b; 
+    }  
+    public int add(int a, int b, int c) { 
+        System.out.println("add(int, int, int) called"); 
+        return a + b + c; 
+    }     
+    public int add(int a, int b, int c, int d) { 
+        System.out.println("add(int, int, int, int) called"); 
+        return a + b + c + d; 
+    } 
+    public double add(double a, double b) { 
+        System.out.println("add(double, double) called"); 
+        return a + b; 
+    }    
+    public float add(float a, float b) { 
+        System.out.println("add(float, float) called"); 
+        return a + b; 
+    }   
+    public String add(String a, String b) { 
+        System.out.println("add(String, String) called"); 
+        return a + b; 
+    } 
+    public String add(String str, int num) { 
+        System.out.println("add(String, int) called"); 
+        return str + num; 
+    }    
+    public String add(int num, String str) { 
+        System.out.println("add(int, String) called"); 
+        return num + str; 
+    } 
+    public int multiply(int a, int b) { 
+        return a * b; 
+    }     
+    public double multiply(double a, double b) { 
+        return a * b; 
+    }     
+    public int multiply(int a, int b, int c) { 
+        return a * b * c; 
+    } 
+} 
+class AreaCalculator { 
+    public double calculateArea(double radius) { 
+        System.out.println("Calculating area of Circle"); 
+        return Math.PI * radius * radius; 
+    }     
+    public double calculateArea(double length, double breadth) { 
+        System.out.println("Calculating area of Rectangle"); 
+        return length * breadth; 
+    }    
+    public double calculateArea(double base, double height, String shape) { 
+        if (shape.equalsIgnoreCase("triangzle")) { 
+            System.out.println("Calculating area of Triangle"); 
+            return 0.5 * base * height; 
+        } 
+        return 0; 
+    }    
+    public double calculateArea(int side) { 
+        System.out.println("Calculating area of Square"); 
+        return side * side; 
+    } 
+} 
+class DisplayHelper { 
+    public void display(int value) { 
+        System.out.println("Integer value: " + value); 
+    } 
+    public void display(double value) { 
+        System.out.println("Double value: " + value); 
+    }   
+    public void display(String value) { 
+        System.out.println("String value: " + value); 
+    }    
+    public void display(int[] arr) { 
+        System.out.print("Array values: "); 
+        for (int num : arr) { 
+            System.out.print(num + " "); 
+        } 
+        System.out.println(); 
+    }     
+    public void display(String message, int times) { 
+        System.out.println("Repeating message " + times + " times:"); 
+        for (int i = 0; i < times; i++) { 
+            System.out.println("  " + (i + 1) + ". " + message); 
+        } 
+    } 
+}
