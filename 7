@@ -1,0 +1,194 @@
+import java.util.Scanner; 
+import java.util.InputMismatchException; 
+import java.io.*; 
+public class Experiment7 { 
+     public static int divide(int a, int b) throws ArithmeticException { 
+        if (b == 0) { 
+            throw new ArithmeticException("Division by zero is not allowed"); 
+        } 
+        return a / b; 
+    } 
+    public static void readFile(String filename) throws FileNotFoundException, IOException { 
+        FileReader fr = null; 
+        BufferedReader br = null;          
+        try { 
+            fr = new FileReader(filename); 
+            br = new BufferedReader(fr); 
+            String line; 
+            System.out.println("File contents:"); 
+            while ((line = br.readLine()) != null) { 
+                System.out.println(line); 
+            } 
+        } finally { 
+            if (br != null) br.close(); 
+            if (fr != null) fr.close(); 
+        } 
+    } 
+    public static void validateAge(int age) { 
+        if (age < 0) { 
+            throw new IllegalArgumentException("Age cannot be negative"); 
+        } else if (age < 18) { 
+            throw new IllegalArgumentException("Age must be 18 or above"); 
+        } 
+        System.out.println("Age " + age + " is valid. Access granted!"); 
+    } 
+    public static void methodA() throws Exception { 
+        System.out.println("Inside methodA"); 
+        methodB(); 
+    }     
+    public static void methodB() throws Exception { 
+        System.out.println("Inside methodB"); 
+        methodC(); 
+    }     
+    public static void methodC() throws Exception { 
+        System.out.println("Inside methodC"); 
+        throw new Exception("Exception thrown from methodC"); 
+    } 
+    public static void tryWithResourcesDemo() { 
+        System.out.println("\n--- Try-With-Resources Demo ---"); 
+        String data = "Hello, Java Exception Handling!"; 
+        try (FileWriter fw = new FileWriter("test_output.txt"); 
+             BufferedWriter bw = new BufferedWriter(fw)) { 
+             
+            bw.write(data); 
+            System.out.println("Data written to file successfully");            
+        } catch (IOException e) { 
+            System.out.println("Error writing to file: " + e.getMessage()); 
+        } 
+        try (FileReader fr = new FileReader("test_output.txt"); 
+             BufferedReader br = new BufferedReader(fr)) { 
+             
+            String line = br.readLine(); 
+            System.out.println("Data read from file: " + line);           
+        } catch (IOException e) { 
+            System.out.println("Error reading file: " + e.getMessage()); 
+        } 
+        new File("test_output.txt").delete(); 
+    }     
+    public static void main(String[] args) { 
+        Scanner sc = new Scanner(System.in); 
+        System.out.println("EXCEPTION HANDLING IN JAVA");  
+        System.out.println("===== 1. BASIC TRY-CATCH ====="); 
+        try { 
+            int[] arr = {1, 2, 3}; 
+            System.out.println("Accessing index 5: " + arr[5]); 
+        } catch (ArrayIndexOutOfBoundsException e) { 
+            System.out.println("Exception caught: " + e.getClass().getSimpleName()); 
+            System.out.println("Message: " + e.getMessage()); 
+        } 
+        System.out.println("\n===== 2. MULTIPLE CATCH BLOCKS ====="); 
+        try { 
+            int[] numbers = {10, 20, 30, 0, 50}; 
+            int index = 2; 
+            System.out.println("Value at index " + index + ": " + numbers[index]); 
+            int result = numbers[index] / numbers[3];  
+            System.out.println("Result: " + result); 
+        } catch (ArrayIndexOutOfBoundsException e) { 
+            System.out.println("Array index error: " + e.getMessage()); 
+        } catch (ArithmeticException e) { 
+            System.out.println("Arithmetic error: " + e.getMessage()); 
+        } catch (Exception e) { 
+            System.out.println("General exception: " + e.getMessage()); 
+        } 
+        System.out.println("\n===== 3. TRY-CATCH-FINALLY ====="); 
+        FileWriter writer = null; 
+        try { 
+            System.out.println("Attempting to open file..."); 
+            writer = new FileWriter("temp.txt"); 
+            System.out.println("File opened successfully"); 
+            writer.write("Test data"); 
+            System.out.println("Data written"); 
+            int x = 10 / 0;              
+        } catch (IOException e) { 
+            System.out.println("IO Exception: " + e.getMessage()); 
+        } catch (ArithmeticException e) { 
+            System.out.println("Arithmetic Exception: " + e.getMessage()); 
+        } finally { 
+            System.out.println("Finally block executed - Cleaning up resources"); 
+            try { 
+                if (writer != null) { 
+                    writer.close(); 
+                    System.out.println("File closed successfully"); 
+                } 
+            } catch (IOException e) { 
+                System.out.println("Error closing file"); 
+            } 
+            new File("temp.txt").delete();  
+        }
+        System.out.println("\n===== 4. THROW KEYWORD ====="); 
+         
+        int[] testAges = {25, -5, 15, 30}; 
+        for (int age : testAges) { 
+            try { 
+                System.out.print("Validating age " + age + ": "); 
+                validateAge(age); 
+            } catch (IllegalArgumentException e) { 
+                System.out.println("Error - " + e.getMessage()); 
+            } 
+        } 
+        System.out.println("\n===== 5. THROWS KEYWORD =====");       
+        try { 
+            System.out.println("20 / 4 = " + divide(20, 4)); 
+            System.out.println("15 / 0 = " + divide(15, 0)); 
+        } catch (ArithmeticException e) { 
+            System.out.println("Exception caught: " + e.getMessage()); 
+        }
+        System.out.println("\n===== 6. NESTED TRY-CATCH ====="); 
+        try { 
+            System.out.println("Outer try block"); 
+             
+            try { 
+                System.out.println("Inner try block"); 
+                String str = null; 
+                System.out.println(str.length());
+            } catch (NullPointerException e) { 
+                System.out.println("Inner catch: NullPointerException caught"); 
+            }      
+            int[] arr = new int[3]; 
+            arr[5] = 100;      
+        } catch (ArrayIndexOutOfBoundsException e) { 
+            System.out.println("Outer catch: ArrayIndexOutOfBoundsException caught"); 
+        } 
+        System.out.println("\n===== 7. EXCEPTION PROPAGATION ====="); 
+        try { 
+            methodA(); 
+        } catch (Exception e) { 
+            System.out.println("Exception caught in main: " + e.getMessage()); 
+            System.out.println("Stack trace:"); 
+            for (StackTraceElement element : e.getStackTrace()) { 
+                System.out.println("  at " + element); 
+            } 
+        } 
+        System.out.println("\n===== 8. MULTI-CATCH BLOCK ====="); 
+        try { 
+            String numStr = "abc"; 
+            int num = Integer.parseInt(numStr); 
+            int[] arr = new int[2]; 
+            arr[5] = num; 
+        } catch (NumberFormatException | ArrayIndexOutOfBoundsException e) { 
+            System.out.println("Caught exception: " + e.getClass().getSimpleName()); 
+            System.out.println("Message: " + e.getMessage()); 
+        } 
+        tryWithResourcesDemo();
+        System.out.println("\n===== 10. COMMON RUNTIME EXCEPTIONS =====");  
+        try { 
+            String s = null; 
+            System.out.println(s.toUpperCase()); 
+        } catch (NullPointerException e) { 
+            System.out.println("✗ NullPointerException: " + e.getMessage()); 
+        } 
+        try { 
+            int n = Integer.parseInt("12.34"); 
+        } catch (NumberFormatException e) { 
+            System.out.println("✗ NumberFormatException: " + e.getMessage()); 
+        } 
+        try { 
+            Object obj = Integer.valueOf(10); 
+            String str = (String) obj; 
+        } catch (ClassCastException e) { 
+            System.out.println("✗ ClassCastException: " + e.getMessage()); 
+        }        
+        System.out.println("\n===== PROGRAM COMPLETED SUCCESSFULLY ====="); 
+        sc.close(); 
+    } 
+} 
