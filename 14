@@ -1,0 +1,257 @@
+import javax.swing.*; 
+import javax.swing.border.*; 
+import java.awt.*; 
+import java.awt.event.*; 
+public class Experiment14 extends JFrame { 
+    private JTextArea logArea; 
+    private int clickCount = 0; 
+    public Experiment14() { 
+        setTitle("Event Handling using Anonymous Inner Classes"); 
+        setSize(900, 700); 
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); 
+        setLocationRelativeTo(null);
+        JPanel mainPanel = new JPanel(new BorderLayout(10, 10)); 
+        mainPanel.setBorder(new EmptyBorder(10, 10, 10, 10));
+        JLabel header = new JLabel("Event Handling Demonstration", JLabel.CENTER); 
+        header.setFont(new Font("Arial", Font.BOLD, 20)); 
+        header.setOpaque(true); 
+        header.setBackground(new Color(70, 130, 180)); 
+        header.setForeground(Color.WHITE); 
+        header.setBorder(new EmptyBorder(10, 10, 10, 10)); 
+        mainPanel.add(header, BorderLayout.NORTH); 
+        JPanel centerPanel = new JPanel(new GridLayout(3, 2, 10, 10)); 
+        JPanel actionPanel = createTitledPanel("1. ActionListener (Button Click)"); 
+        JButton btnAction = new JButton("Click Me!"); 
+        btnAction.setFont(new Font("Arial", Font.BOLD, 14));
+        btnAction.addActionListener(new ActionListener() { 
+            @Override 
+            public void actionPerformed(ActionEvent e) { 
+                clickCount++; 
+                log("ActionEvent: Button clicked! Count: " + clickCount); 
+                log("  Source: " + e.getSource().getClass().getSimpleName()); 
+                log("  Action Command: " + e.getActionCommand()); 
+                log("  Modifiers: " + e.getModifiers()); 
+            } 
+        }); 
+        actionPanel.add(btnAction); 
+        centerPanel.add(actionPanel); 
+        JPanel mousePanel = createTitledPanel("2. MouseListener (Mouse Events)"); 
+        JLabel lblMouse = new JLabel("Hover or Click Here", JLabel.CENTER); 
+        lblMouse.setOpaque(true); 
+        lblMouse.setBackground(Color.LIGHT_GRAY); 
+        lblMouse.setPreferredSize(new Dimension(150, 80)); 
+        lblMouse.setBorder(BorderFactory.createLineBorder(Color.DARK_GRAY)); 
+        lblMouse.addMouseListener(new MouseListener() { 
+            @Override 
+            public void mouseClicked(MouseEvent e) { 
+                log("MouseEvent: CLICKED at (" + e.getX() + ", " + e.getY() + ")"); 
+                log("  Click count: " + e.getClickCount()); 
+                log("  Button: " + e.getButton()); 
+            } 
+            @Override 
+            public void mousePressed(MouseEvent e) { 
+                log("MouseEvent: PRESSED"); 
+                lblMouse.setBackground(Color.YELLOW); 
+            } 
+            @Override 
+            public void mouseReleased(MouseEvent e) { 
+                log("MouseEvent: RELEASED"); 
+                lblMouse.setBackground(Color.LIGHT_GRAY); 
+            } 
+            @Override 
+            public void mouseEntered(MouseEvent e) { 
+                log("MouseEvent: ENTERED"); 
+                lblMouse.setBackground(Color.CYAN); 
+            }
+            @Override 
+            public void mouseExited(MouseEvent e) { 
+                log("MouseEvent: EXITED"); 
+                lblMouse.setBackground(Color.LIGHT_GRAY); 
+            } 
+        }); 
+        mousePanel.add(lblMouse); 
+        centerPanel.add(mousePanel); 
+        JPanel keyPanel = createTitledPanel("3. KeyListener (Keyboard Events)"); 
+        JTextField txtKey = new JTextField("Type here...", 15); 
+        txtKey.setFont(new Font("Arial", Font.PLAIN, 14)); 
+        txtKey.addKeyListener(new KeyListener() { 
+            @Override 
+            public void keyTyped(KeyEvent e) { 
+                log("KeyEvent: TYPED - '" + e.getKeyChar() + "'"); 
+            } 
+            @Override 
+            public void keyPressed(KeyEvent e) { 
+                log("KeyEvent: PRESSED - Key Code: " + e.getKeyCode() +  
+                    " (" + KeyEvent.getKeyText(e.getKeyCode()) + ")"); 
+            } 
+            @Override 
+            public void keyReleased(KeyEvent e) { 
+                log("KeyEvent: RELEASED - Key Code: " + e.getKeyCode()); 
+            } 
+        }); 
+        keyPanel.add(txtKey); 
+        centerPanel.add(keyPanel); 
+        JPanel itemPanel = createTitledPanel("4. ItemListener (Selection Events)"); 
+        JPanel checkBoxPanel = new JPanel(new GridLayout(3, 1));
+        JCheckBox chk1 = new JCheckBox("Option 1"); 
+        JCheckBox chk2 = new JCheckBox("Option 2"); 
+        JComboBox<String> combo = new JComboBox<>( 
+            new String[]{"Select...", "Java", "Python", "C++"}); 
+        ItemListener checkBoxListener = new ItemListener() { 
+            @Override 
+            public void itemStateChanged(ItemEvent e) { 
+                JCheckBox source = (JCheckBox) e.getSource(); 
+                String state = e.getStateChange() == ItemEvent.SELECTED ?  
+                              "SELECTED" : "DESELECTED"; 
+                log("ItemEvent: " + source.getText() + " - " + state); 
+            } 
+        }; 
+        chk1.addItemListener(checkBoxListener); 
+        chk2.addItemListener(checkBoxListener); 
+        combo.addItemListener(new ItemListener() { 
+            @Override 
+            public void itemStateChanged(ItemEvent e) { 
+                if (e.getStateChange() == ItemEvent.SELECTED) { 
+                    log("ItemEvent: ComboBox selected - " + e.getItem()); 
+                } 
+            } 
+        }); 
+        checkBoxPanel.add(chk1); 
+        checkBoxPanel.add(chk2); 
+        checkBoxPanel.add(combo); 
+        itemPanel.add(checkBoxPanel); 
+        centerPanel.add(itemPanel); 
+        JPanel focusPanel = createTitledPanel("5. FocusListener (Focus Events)"); 
+        JTextField txtFocus1 = new JTextField("Field 1", 10); 
+        JTextField txtFocus2 = new JTextField("Field 2", 10); 
+        FocusListener focusListener = new FocusListener() { 
+            @Override 
+            public void focusGained(FocusEvent e) { 
+                JTextField source = (JTextField) e.getSource(); 
+                source.setBackground(Color.YELLOW); 
+                log("FocusEvent: GAINED by " + source.getText()); 
+            } 
+            @Override 
+            public void focusLost(FocusEvent e) { 
+                JTextField source = (JTextField) e.getSource(); 
+                source.setBackground(Color.WHITE); 
+                log("FocusEvent: LOST by " + source.getText()); 
+            } 
+        }; 
+        txtFocus1.addFocusListener(focusListener); 
+        txtFocus2.addFocusListener(focusListener); 
+        JPanel focusFieldsPanel = new JPanel(new FlowLayout()); 
+        focusFieldsPanel.add(txtFocus1); 
+        focusFieldsPanel.add(txtFocus2); 
+        focusPanel.add(focusFieldsPanel); 
+        centerPanel.add(focusPanel); 
+        JPanel motionPanel = createTitledPanel("6. MouseMotionListener"); 
+        JLabel lblMotion = new JLabel("Move mouse here", JLabel.CENTER); 
+        lblMotion.setOpaque(true); 
+        lblMotion.setBackground(new Color(200, 200, 255)); 
+        lblMotion.setPreferredSize(new Dimension(150, 80)); 
+        lblMotion.setBorder(BorderFactory.createLineBorder(Color.BLUE)); 
+        lblMotion.addMouseMotionListener(new MouseMotionListener() { 
+            @Override 
+            public void mouseDragged(MouseEvent e) { 
+                lblMotion.setText("Dragging: " + e.getX() + ", " + e.getY()); 
+            }
+            @Override 
+            public void mouseMoved(MouseEvent e) { 
+                lblMotion.setText("Position: " + e.getX() + ", " + e.getY()); 
+            } 
+        }); 
+        motionPanel.add(lblMotion); 
+        centerPanel.add(motionPanel);
+        mainPanel.add(centerPanel, BorderLayout.CENTER); 
+        JPanel logPanel = new JPanel(new BorderLayout()); 
+        logPanel.setBorder(new TitledBorder("Event Log")); 
+        logArea = new JTextArea(12, 50); 
+        logArea.setEditable(false); 
+        logArea.setFont(new Font("Monospaced", Font.PLAIN, 11)); 
+        JScrollPane scrollPane = new JScrollPane(logArea); 
+        JButton btnClear = new JButton("Clear Log"); 
+        btnClear.addActionListener(new ActionListener() { 
+            @Override 
+            public void actionPerformed(ActionEvent e) { 
+                logArea.setText(""); 
+                clickCount = 0; 
+                log("Log cleared. Ready for new events."); 
+            } 
+        });
+        logPanel.add(scrollPane, BorderLayout.CENTER); 
+        logPanel.add(btnClear, BorderLayout.SOUTH); 
+        mainPanel.add(logPanel, BorderLayout.SOUTH); 
+        add(mainPanel);
+        addWindowListener(new WindowListener() { 
+            @Override 
+            public void windowOpened(WindowEvent e) { 
+                log("WindowEvent: OPENED"); 
+            }
+            @Override 
+            public void windowClosing(WindowEvent e) { 
+                log("WindowEvent: CLOSING"); 
+                int confirm = JOptionPane.showConfirmDialog( 
+                    Experiment14.this, 
+                    "Are you sure you want to exit?", 
+                    "Confirm Exit", 
+                    JOptionPane.YES_NO_OPTION 
+                ); 
+                if (confirm == JOptionPane.YES_OPTION) { 
+                    dispose(); 
+                    System.exit(0); 
+                } 
+            } 
+            @Override 
+            public void windowClosed(WindowEvent e) { 
+                log("WindowEvent: CLOSED"); 
+            }
+            @Override 
+            public void windowIconified(WindowEvent e) { 
+                log("WindowEvent: ICONIFIED (Minimized)"); 
+            } 
+            @Override 
+            public void windowDeiconified(WindowEvent e) { 
+                log("WindowEvent: DEICONIFIED (Restored)"); 
+            }
+            @Override 
+            public void windowActivated(WindowEvent e) { 
+                log("WindowEvent: ACTIVATED"); 
+            } 
+            @Override 
+            public void windowDeactivated(WindowEvent e) { 
+                log("WindowEvent: DEACTIVATED"); 
+            } 
+        }); 
+        log("Application started. Interact with components to see events."); 
+        log("---------------------------------------------------"); 
+    }
+    private JPanel createTitledPanel(String title) { 
+        JPanel panel = new JPanel(new FlowLayout(FlowLayout.CENTER)); 
+        panel.setBorder(new TitledBorder(title)); 
+        return panel; 
+    } 
+    private void log(String message) { 
+        logArea.append(message + "\n"); 
+        logArea.setCaretPosition(logArea.getDocument().getLength()); 
+    }   
+    public static void main(String[] args) { 
+        System.out.println("=========EVENT HANDLING USING ANONYMOUS INNER CLASSES==========");    
+        System.out.println("Event Types Demonstrated:"); 
+        System.out.println("  1. ActionListener - Button clicks"); 
+        System.out.println("  2. MouseListener - Mouse click, enter, exit, press, release"); 
+        System.out.println("  3. KeyListener - Key typed, pressed, released"); 
+        System.out.println("  4. ItemListener - Checkbox and ComboBox selection"); 
+        System.out.println("  5. FocusListener - Focus gained and lost"); 
+        System.out.println("  6. MouseMotionListener - Mouse move and drag"); 
+        System.out.println("  7. WindowListener - Window events (open, close, minimize, etc.)"); 
+        System.out.println("\nAll event handlers implemented using Anonymous Inner Classes."); 
+        System.out.println("\nLaunching GUI...\n"); 
+        SwingUtilities.invokeLater(new Runnable() { 
+            @Override 
+            public void run() { 
+                new Experiment14().setVisible(true); 
+            } 
+        }); 
+    } 
+} 
