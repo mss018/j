@@ -1,0 +1,350 @@
+import java.util.Scanner; 
+public class Experiment8 { 
+    public static void main(String[] args) { 
+        Scanner sc = new Scanner(System.in); 
+        BankAccount account = new BankAccount("1234567890", "Rahul Sharma", 75000.00, 1234); 
+        ATM atm = new ATM();          
+        System.out.println("ATM WITHDRAWAL SYSTEM WITH CUSTOM EXCEPTION HANDLING");  
+        try {
+            atm.insertCard(account);
+            boolean pinVerified = false; 
+            while (!pinVerified) { 
+                System.out.print("\nEnter your 4-digit PIN: "); 
+                int pin = sc.nextInt();  
+                try { 
+                    pinVerified = atm.verifyPIN(pin); 
+                } catch (InvalidPINException e) { 
+                    System.out.println("✗ " + e.getMessage()); 
+                    if (e.getRemainingAttempts() > 0) { 
+                        System.out.println("  Remaining attempts: " + e.getRemainingAttempts()); 
+                    } 
+                } 
+            } 
+            boolean exit = false; 
+            while (!exit) { 
+                System.out.println("===========ATM MENU=========="); 
+                System.out.println("1.Check Balance"); 
+                System.out.println("2.Withdraw Cash"); 
+                System.out.println("3.Deposit Cash"); 
+                System.out.println("4.Exit");  
+                System.out.print("Enter your choice: ");   
+                int choice = sc.nextInt(); 
+                switch (choice) { 
+                    case 1: 
+                        atm.checkBalance(); 
+                        break;    
+                    case 2: 
+                        System.out.print("Enter amount to withdraw (multiples of ₹100): ₹"); 
+                        double withdrawAmount = sc.nextDouble(); 
+                        try { 
+                            atm.withdraw(withdrawAmount); 
+                        } catch (InsufficientBalanceException e) { 
+                            System.out.println("\n TRANSACTION FAILED"); 
+                            System.out.println("  " + e.getMessage()); 
+                            System.out.println("  Minimum balance of ₹" +  
+                                             account.getMinBalance() + " must be maintained."); 
+                        } catch (DailyLimitExceededException e) { 
+                            System.out.println("\nTRANSACTION FAILED"); 
+                            System.out.println("  " + e.getMessage()); 
+                            System.out.println("  Daily limit: ₹" + account.getDailyLimit()); 
+                            System.out.println("  Remaining limit for today: ₹" +  
+                                             e.getRemainingLimit()); 
+                        } catch (InvalidAmountException e) { 
+                            System.out.println("\n INVALID AMOUNT"); 
+                            System.out.println("  " + e.getMessage()); 
+                        } 
+                        break; 
+                    case 3: 
+                        System.out.print("Enter amount to deposit (multiples of ₹100): ₹"); 
+                        double depositAmount = sc.nextDouble();      
+                        try { 
+                            atm.deposit(depositAmount); 
+                        } catch (InvalidAmountException e) { 
+                            System.out.println("\n INVALID AMOUNT"); 
+                            System.out.println("  " + e.getMessage()); 
+                        } 
+                        break;   
+                    case 4: 
+                        exit = true; 
+                        atm.ejectCard(); 
+                        break;   
+                    default: 
+                        System.out.println("Invalid choice. Please try again."); 
+                } 
+            }  
+        } catch (CardBlockedException e) { 
+            System.out.println("===CARD BLOCKED==="); 
+            System.out.println("  " + e.getMessage());  
+        } 
+        BankAccount demoAccount = new BankAccount("9876543210", "Demo User", 5000.00, 9999); 
+        ATM demoATM = new ATM();      
+        try { 
+            demoATM.insertCard(demoAccount); 
+            demoATM.verifyPIN(9999);
+            System.out.println("\n--- Demo 1: Insufficient Balance ---"); 
+            try { 
+                demoATM.withdraw(10000); 
+            } catch (InsufficientBalanceException e) { 
+                System.out.println("Exception: " + e.getClass().getSimpleName()); 
+                System.out.println("Message: " + e.getMessage()); 
+            }
+            System.out.println("\n--- Demo 2: Invalid Amount (not multiple of 100) ---"); 
+            try { 
+                demoATM.withdraw(1550);  
+            } catch (InvalidAmountException e) { 
+                System.out.println("Exception: " + e.getClass().getSimpleName()); 
+                System.out.println("Message: " + e.getMessage()); 
+            }
+            System.out.println("\n--- Demo 3: Daily Limit Exceeded ---"); 
+            BankAccount richAccount = new BankAccount("1111222233", "Rich User",  
+                                                       100000.00, 1111); 
+            ATM richATM = new ATM(); 
+            richATM.insertCard(richAccount); 
+            richATM.verifyPIN(1111);
+            richATM.withdraw(48000); 
+            System.out.println("\nAttempting to withdraw ₹5000 more..."); 
+            try { 
+                richATM.withdraw(5000);
+            } catch (DailyLimitExceededException e) { 
+                System.out.println("Exception: " + e.getClass().getSimpleName()); 
+                System.out.println("Message: " + e.getMessage()); 
+                System.out.println("Remaining daily limit: ₹" + e.getRemainingLimit()); 
+            } 
+             
+        } catch (Exception e) { 
+            System.out.println("Unexpected error: " + e.getMessage()); 
+        }
+        System.out.println("\n--- Demo 4: Card Blocked (3 wrong PIN attempts) ---"); 
+        BankAccount blockedAccount = new BankAccount("4444555566", "Block Test",  
+                                                      10000.00, 1234); 
+        ATM blockATM = new ATM();    
+        try { 
+            blockATM.insertCard(blockedAccount);      
+            for (int i = 1; i <= 3; i++) { 
+                try { 
+                    System.out.println("Attempt " + i + ": Entering wrong PIN..."); 
+                    blockATM.verifyPIN(0000); 
+                } catch (InvalidPINException e) { 
+                    System.out.println("  " + e.getMessage()); 
+                } 
+            } 
+        } catch (CardBlockedException e) { 
+            System.out.println("\n" + e.getMessage()); 
+        } 
+         
+        sc.close(); 
+    } 
+}
+class InsufficientBalanceException extends Exception { 
+    private double currentBalance; 
+    private double requestedAmount; 
+     
+    public InsufficientBalanceException(double currentBalance, double requestedAmount) { 
+        super("Insufficient balance! Available: ₹" + currentBalance +  
+              ", Requested: ₹" + requestedAmount); 
+        this.currentBalance = currentBalance; 
+        this.requestedAmount = requestedAmount; 
+    } 
+     
+    public double getCurrentBalance() { 
+        return currentBalance; 
+    } 
+     
+    public double getRequestedAmount() { 
+        return requestedAmount; 
+    } 
+}
+class InvalidPINException extends Exception { 
+    private int attempts; 
+    private static final int MAX_ATTEMPTS = 3; 
+     
+    public InvalidPINException(int attempts) { 
+        super("Invalid PIN! Attempt " + attempts + " of " + MAX_ATTEMPTS); 
+        this.attempts = attempts; 
+    } 
+     
+    public int getAttempts() { 
+        return attempts; 
+    } 
+     
+    public int getRemainingAttempts() { 
+        return MAX_ATTEMPTS - attempts; 
+    } 
+     
+    public boolean isCardBlocked() { 
+        return attempts >= MAX_ATTEMPTS; 
+    } 
+}
+class DailyLimitExceededException extends Exception { 
+    private double dailyLimit; 
+    private double alreadyWithdrawn; 
+    private double requestedAmount; 
+     
+    public DailyLimitExceededException(double dailyLimit, double alreadyWithdrawn,  
+                                        double requestedAmount) { 
+        super("Daily withdrawal limit exceeded!"); 
+        this.dailyLimit = dailyLimit; 
+        this.alreadyWithdrawn = alreadyWithdrawn; 
+        this.requestedAmount = requestedAmount; 
+    } 
+     
+    public double getRemainingLimit() { 
+        return dailyLimit - alreadyWithdrawn; 
+    } 
+}
+class InvalidAmountException extends Exception { 
+    public InvalidAmountException(String message) { 
+        super(message); 
+    } 
+} 
+class CardBlockedException extends Exception { 
+    public CardBlockedException() { 
+        super("Your card has been blocked due to multiple incorrect PIN attempts. " + 
+              "Please contact your bank."); 
+    } 
+}
+class BankAccount { 
+    private String accountNumber; 
+    private String accountHolder; 
+    private double balance; 
+    private int pin; 
+    private double dailyWithdrawn; 
+    private static final double DAILY_LIMIT = 50000.0; 
+    private static final double MIN_BALANCE = 1000.0;     
+    public BankAccount(String accountNumber, String accountHolder, double balance, int pin) { 
+        this.accountNumber = accountNumber; 
+        this.accountHolder = accountHolder; 
+        this.balance = balance; 
+        this.pin = pin; 
+        this.dailyWithdrawn = 0; 
+    }    
+    public String getAccountNumber() { 
+        return accountNumber; 
+    }     
+    public String getAccountHolder() { 
+        return accountHolder; 
+    }     
+    public double getBalance() { 
+        return balance; 
+    }   
+    public double getDailyWithdrawn() { 
+        return dailyWithdrawn; 
+    }     
+    public double getDailyLimit() { 
+        return DAILY_LIMIT; 
+    }     
+    public double getRemainingDailyLimit() { 
+        return DAILY_LIMIT - dailyWithdrawn; 
+    }     
+    public boolean validatePIN(int enteredPIN) { 
+        return this.pin == enteredPIN; 
+    }     
+    public void withdraw(double amount) { 
+        this.balance -= amount; 
+        this.dailyWithdrawn += amount; 
+    }     
+    public void deposit(double amount) { 
+        this.balance += amount; 
+    }     
+    public double getMinBalance() { 
+        return MIN_BALANCE; 
+    }    
+    public void resetDailyLimit() { 
+        this.dailyWithdrawn = 0; 
+    } 
+} 
+class ATM { 
+    private BankAccount currentAccount; 
+    private int pinAttempts; 
+    private boolean cardBlocked; 
+    private static final int MAX_PIN_ATTEMPTS = 3;    
+    public ATM() { 
+        this.pinAttempts = 0; 
+        this.cardBlocked = false; 
+    }
+    public void insertCard(BankAccount account) throws CardBlockedException { 
+        if (cardBlocked) { 
+            throw new CardBlockedException(); 
+        } 
+        this.currentAccount = account; 
+        this.pinAttempts = 0; 
+        System.out.println("======Welcome to ABC Bank ATM====="); 
+        System.out.println("Card inserted: ****" +  
+                          account.getAccountNumber().substring( 
+                              account.getAccountNumber().length() - 4)); 
+    }    
+    public boolean verifyPIN(int enteredPIN) throws InvalidPINException, CardBlockedException { 
+        if (cardBlocked) { 
+            throw new CardBlockedException(); 
+        }          
+        if (!currentAccount.validatePIN(enteredPIN)) { 
+            pinAttempts++;             
+            if (pinAttempts >= MAX_PIN_ATTEMPTS) { 
+                cardBlocked = true; 
+                throw new CardBlockedException(); 
+            }             
+            throw new InvalidPINException(pinAttempts); 
+        }         
+        pinAttempts = 0; 
+        System.out.println("PIN verified successfully!"); 
+        return true; 
+    }    
+    public void withdraw(double amount) throws InsufficientBalanceException,  
+                                                DailyLimitExceededException, 
+                                                InvalidAmountException { 
+        if (amount <= 0) { 
+            throw new InvalidAmountException("Withdrawal amount must be positive"); 
+        } 
+         
+        if (amount % 100 != 0) { 
+            throw new InvalidAmountException( 
+                "Amount must be in multiples of ₹100. Please enter a valid amount."); 
+        }
+        if (currentAccount.getDailyWithdrawn() + amount > currentAccount.getDailyLimit()) { 
+            throw new DailyLimitExceededException( 
+                currentAccount.getDailyLimit(), 
+                currentAccount.getDailyWithdrawn(), 
+                amount); 
+        }
+        double availableForWithdrawal = currentAccount.getBalance() -  
+                                        currentAccount.getMinBalance(); 
+         
+        if (amount > availableForWithdrawal) { 
+            throw new InsufficientBalanceException(availableForWithdrawal, amount); 
+        }
+        currentAccount.withdraw(amount);   
+        System.out.println("==========TRANSACTION SUCCESSFULL===========");  
+        System.out.printf("Amount Withdrawn: ₹%-18.2f%n", amount); 
+        System.out.printf("Remaining Balance: ₹%-17.2f%n", currentAccount.getBalance()); 
+        System.out.printf("Daily Limit Left: ₹%-18.2f%n",  
+                         currentAccount.getRemainingDailyLimit()); 
+        System.out.println("\nPlease collect your cash."); 
+    }     
+    public void checkBalance() {  
+        System.out.println("===========ACCOUNT BALANCE===========");  
+        System.out.printf("Account Holder: %-21s%n", currentAccount.getAccountHolder()); 
+        System.out.printf("Current Balance: ₹%-19.2f%n", currentAccount.getBalance()); 
+        System.out.printf("Today's Withdrawal: ₹%-16.2f%n",  
+                         currentAccount.getDailyWithdrawn()); 
+        System.out.printf("Remaining Daily Limit: ₹%-13.2f%n",  
+                         currentAccount.getRemainingDailyLimit()); 
+    }      
+    public void deposit(double amount) throws InvalidAmountException { 
+        if (amount <= 0) { 
+            throw new InvalidAmountException("Deposit amount must be positive"); 
+        }        
+        if (amount % 100 != 0) { 
+            throw new InvalidAmountException( 
+                "Amount must be in multiples of ₹100. Please enter valid notes."); 
+        }        
+        currentAccount.deposit(amount);         
+        System.out.println("==============DEPOSIT SUCCESSFULL=========="); 
+        System.out.printf("Amount Deposited: ₹%-18.2f%n", amount); 
+        System.out.printf("New Balance: ₹%-23.2f%n", currentAccount.getBalance()); 
+    } 
+     
+    public void ejectCard() { 
+        System.out.println("=====Thank you for using ABC Bank ATM Please collect your card====="); 
+        currentAccount = null; 
+    } 
+} 
