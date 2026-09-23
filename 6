@@ -1,0 +1,58 @@
+import java.util.Scanner;
+interface Circle {
+    void circle();    
+}
+interface Rectangle {
+    void rectangle();
+}
+class Shape {
+    Scanner sc=new Scanner(System.in);
+    void display() {
+        System.out.println("\nCalculation Completed!");
+    }
+}
+class Area extends Shape implements Circle, Rectangle {
+    @Override
+    public void circle() {
+        System.out.print("Enter radius: ");
+        double r=sc.nextDouble();
+        System.out.println("Circle Area = " + (Math.PI * r * r));
+        System.out.println("Circle Perimeter = " + (2 * Math.PI * r));
+    }
+    @Override
+    public void rectangle() {
+        System.out.print("Enter length: ");
+        double l = sc.nextDouble();
+        System.out.print("Enter breadth: ");
+        double b = sc.nextDouble();
+        System.out.println("Rectangle Area = " + (l * b));
+        System.out.println("Rectangle Perimeter = " + (2 * (l + b)));
+    }
+    void display(double value) {
+        System.out.println("Value = " + value);
+    }
+}
+public class Experiment6 {
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        Area obj = new Area();
+        int choice;
+        do {
+            System.out.println("\n1. Circle");
+            System.out.println("2. Rectangle");
+            System.out.println("3. Exit");
+            System.out.print("Enter choice: ");
+            choice = sc.nextInt();
+            if (choice == 1)
+                obj.circle();
+            else if (choice == 2)
+                obj.rectangle();
+            else if (choice == 3)
+                System.out.println("Exiting...");
+            else
+                System.out.println("Invalid choice!");
+        } while (choice != 3);       
+        obj.display();
+        sc.close();
+    }
+}
